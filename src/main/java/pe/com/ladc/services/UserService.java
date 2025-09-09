@@ -15,7 +15,6 @@ public class UserService {
     @Transactional
     public void createUser(Users users) {
         users.setPassword(BCrypt.hashpw(users.getPassword(), BCrypt.gensalt()));
-        users.setId(0);
         Users.persist(users);
     }
 
@@ -29,7 +28,7 @@ public class UserService {
         String jwt = Jwt.claims()
                 .subject(users.getUsername())
                 .groups(users.getRoles())
-                .expiresAt(System.currentTimeMillis() / 1000 + 3600)
+                .expiresAt(System.currentTimeMillis() / 1000 + (12 * 60 * 60))
                 .sign();
 
         return  Response.status(Response.Status.OK).cookie(

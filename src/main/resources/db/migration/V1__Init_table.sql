@@ -2,7 +2,6 @@ CREATE TABLE public.users (
       id serial PRIMARY KEY ,
       username VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL,
-      email VARCHAR(200) UNIQUE NOT NULL,
       created_at TIMESTAMP DEFAULT NOW(),
       CONSTRAINT UK_user_username UNIQUE (username)
 );
