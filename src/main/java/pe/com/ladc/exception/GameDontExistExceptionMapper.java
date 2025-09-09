@@ -1,6 +1,6 @@
 package pe.com.ladc.exception;
 
-import pe.com.ladc.entity.ResponseModel;
+import pe.com.ladc.util.ResponseModel;
 import pe.com.ladc.exceptions.GameDontExistException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;

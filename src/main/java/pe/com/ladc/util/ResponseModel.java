@@ -1,16 +1,21 @@
-package pe.com.ladc.entity;
+package pe.com.ladc.util;
 
+import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Data
 @Schema(description = "Response model")
 public class ResponseModel {
+
     @Schema(description = "Message",example = "OK")
     private String message;
+
     @Schema(description = "HTTP code",example = "200")
     private int code;
+
     @Schema(description = "Timestamp of operation",example = "2024-09-09 13:04:01")
     private String timestamp;
 
@@ -22,28 +27,4 @@ public class ResponseModel {
         this.timestamp = now.format(formatter);
     }
 
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
 }

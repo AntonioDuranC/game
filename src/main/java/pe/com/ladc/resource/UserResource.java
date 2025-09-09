@@ -1,7 +1,7 @@
 package pe.com.ladc.resource;
 
-import pe.com.ladc.entity.ResponseModel;
-import pe.com.ladc.entity.User;
+import pe.com.ladc.util.ResponseModel;
+import pe.com.ladc.entity.Users;
 import pe.com.ladc.services.UserService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -20,14 +20,14 @@ public class UserResource {
     UserService userService;
 
     @POST
-    public ResponseModel register(User user){
-        userService.createUser(user);
+    public ResponseModel register(Users users){
+        userService.createUser(users);
         return new ResponseModel("The user has been created",200);
     }
 
     @POST
     @Path("/login")
-    public Response login(User user){
-        return userService.login(user.getUsername(), user.getPassword());
+    public Response login(Users users){
+        return userService.login(users.getUsername(), users.getPassword());
     }
 }

@@ -1,7 +1,7 @@
 package pe.com.ladc.services;
 
-import pe.com.ladc.entity.ResponseModel;
-import pe.com.ladc.entity.User;
+import pe.com.ladc.util.ResponseModel;
+import pe.com.ladc.entity.Users;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -13,22 +13,22 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserService {
 
     @Transactional
-    public void createUser(User user) {
-        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
-        user.setId(0);
-        User.persist(user);
+    public void createUser(Users users) {
+        users.setPassword(BCrypt.hashpw(users.getPassword(), BCrypt.gensalt()));
+        users.setId(0);
+        Users.persist(users);
     }
 
     public Response login(String username, String password) {
-        User user = User.find("username", username).firstResult();
+        Users users = Users.find("username", username).firstResult();
 
-        if (user == null || !BCrypt.checkpw(password, user.getPassword())) {
+        if (users == null || !BCrypt.checkpw(password, users.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(
                     new ResponseModel("Invalid username or password",401)).build();
         }
         String jwt = Jwt.claims()
-                .subject(user.getUsername())
-                .groups(user.getRoles())
+                .subject(users.getUsername())
+                .groups(users.getRoles())
                 .expiresAt(System.currentTimeMillis() / 1000 + 3600)
                 .sign();
 
