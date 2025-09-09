@@ -4,9 +4,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import pe.com.ladc.enums.Category;
+import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.entity.Games;
-import pe.com.ladc.exception.InvalidCategoryException;
+import pe.com.ladc.exceptions.InvalidEnumException;
 import pe.com.ladc.exceptions.GameDontExistException;
 import pe.com.ladc.repository.GamesRepository;
 
@@ -63,7 +63,7 @@ public class GameService {
 
             // Actualizamos solo los campos necesarios sobre la misma entidad
             existing.setTitle(game.getTitle() != null ? game.getTitle() : existing.getTitle());
-            existing.setCategory(game.getCategory() != null ? game.getCategory() : existing.getCategory());
+            existing.setGameCategory(game.getGameCategory() != null ? game.getGameCategory() : existing.getGameCategory());
             existing.setDescription(game.getDescription() != null ? game.getDescription() : existing.getDescription());
             existing.setPrice(game.getPrice() != null ? game.getPrice() : existing.getPrice());
             existing.setStock(game.getStock() != null ? game.getStock() : existing.getStock());
@@ -84,7 +84,7 @@ public class GameService {
                 game.setTitle(title);
             }
             if (category != null && !category.isBlank()) {
-                game.setCategory(parseCategory(category));
+                game.setGameCategory(parseCategory(category));
             }
             return game; // cambios ya quedan en contexto persistente
         }).orElseThrow(() ->
@@ -92,12 +92,12 @@ public class GameService {
     }
 
     // 🔹 Utilidad: convierte String a Enum con validación
-    private Category parseCategory(String category) {
+    private GameCategory parseCategory(String category) {
         try {
-            return Category.valueOf(category.toUpperCase());
+            return GameCategory.valueOf(category.toUpperCase());
         } catch (IllegalArgumentException e) {
             log.error("Invalid category: {}", category);
-            throw new InvalidCategoryException(category);
+            throw new InvalidEnumException(category);
         }
     }
 }

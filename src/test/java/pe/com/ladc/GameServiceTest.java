@@ -1,6 +1,6 @@
 package pe.com.ladc;
 
-import pe.com.ladc.enums.Category;
+import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.entity.Games;
 import pe.com.ladc.repository.GamesRepository;
 import pe.com.ladc.services.GameService;
@@ -31,7 +31,7 @@ class GameServiceTest {
 
         List<Games> mockGames = List.of(Games.builder()
                 .title("Cyberpunk 2077")
-                .category(Category.RPG)
+                .gameCategory(GameCategory.RPG)
                 .price(new BigDecimal("49.99"))
                 .stock(100)
                 .releaseDate(LocalDate.of(2020, 12, 10))

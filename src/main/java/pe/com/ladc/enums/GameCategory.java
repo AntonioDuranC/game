@@ -1,6 +1,6 @@
 package pe.com.ladc.enums;
 
-public enum Category {
+public enum GameCategory {
     ACTION,
     RPG,
     STRATEGY,

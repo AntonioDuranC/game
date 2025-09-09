@@ -7,10 +7,11 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(schema = "public")
-@Data
+@Getter
+@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Users extends PanacheEntityBase {

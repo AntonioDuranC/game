@@ -1,5 +1,6 @@
 package pe.com.ladc.resource;
 
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import pe.com.ladc.util.ResponseModel;
 import pe.com.ladc.entity.Users;
 import pe.com.ladc.services.UserService;
@@ -14,6 +15,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/user")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Tag(name = "Users")
 public class UserResource {
 
     @Inject

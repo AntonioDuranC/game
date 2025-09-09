@@ -21,18 +21,11 @@ import java.util.List;
 @Path("/games")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@APIResponse(
-        responseCode = "200",
-        description = "Return operation data.",
-        content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ResponseModel.class)))
-@Tag(name = "Game controller")
+@Tag(name = "Games")
 public class GameResource {
 
     @Inject
-    private GameService gameService;
-
+    GameService gameService;
 
     @POST
     @Operation(
@@ -43,7 +36,6 @@ public class GameResource {
         gameService.createGame(game);
         return Response.ok(new ResponseModel("Game created",200)).build();
     }
-
 
     @PUT
     @Operation(
@@ -57,10 +49,9 @@ public class GameResource {
                     schema = @Schema(implementation = ResponseModel.class)))
     @RolesAllowed("admin")
     public Response replaceGame(Games game){
-        gameService.replaceGame(game.getId(),game.getTitle(),game.getCategory().name());
+        gameService.replaceGame(game.getId(),game.getTitle(),game.getGameCategory().name());
         return Response.ok(new ResponseModel("Game updated",200)).build();
     }
-
 
     @PATCH
     @Operation(
@@ -78,7 +69,6 @@ public class GameResource {
         return Response.ok(new ResponseModel("Game updated", 200)).build();
     }
 
-
     @DELETE
     @Path("/{id}")
     @Operation(
@@ -95,7 +85,6 @@ public class GameResource {
         gameService.deleteGame(id);
         return Response.ok(new ResponseModel("Game deleted",200)).build();
     }
-
 
     @GET
     @Operation(
@@ -133,7 +122,6 @@ public class GameResource {
                 .header("X-Total-Count", totalGames)
                 .build();
     }
-
 
     @GET
     @Path("/{id}")
