@@ -1,6 +1,6 @@
 package pe.com.ladc.services;
 
-import pe.com.ladc.util.ResponseModel;
+import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.Users;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,7 +23,7 @@ public class UserService {
 
         if (users == null || !BCrypt.checkpw(password, users.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(
-                    new ResponseModel("Invalid username or password",401)).build();
+                    new ResponseDTO("Invalid username or password",401)).build();
         }
         String jwt = Jwt.claims()
                 .subject(users.getUsername())
@@ -40,6 +40,6 @@ public class UserService {
                         3600,
                         false,
                         false))
-                .entity(new ResponseModel("SUCCESS",200)).build();
+                .entity(new ResponseDTO("SUCCESS",200)).build();
     }
 }

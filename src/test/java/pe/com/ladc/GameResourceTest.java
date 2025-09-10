@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.equalTo;
 
 @QuarkusTest
-public class GameResourceTest {
+class GameResourceTest {
 
     @Test
-    public void testGetUsersEndpoint() {
+    void testGetUsersEndpoint() {
         RestAssured.given()
                 .when().get("/games/1")
                 .then()

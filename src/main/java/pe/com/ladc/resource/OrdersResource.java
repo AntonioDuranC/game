@@ -5,10 +5,12 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.Orders;
 import pe.com.ladc.services.OrdersService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)
@@ -16,34 +18,45 @@ import java.util.List;
 @Tag(name = "Orders")
 public class OrdersResource {
 
+    private final OrdersService service;
+
     @Inject
-    OrdersService ordersService;
+    public OrdersResource(OrdersService orderItemsService) {
+        this.service = orderItemsService;
+    }
+
 
     @POST
     public Response create(Orders order) {
-        return Response.status(Response.Status.CREATED).entity(ordersService.createOrder(order)).build();
+        Orders createdOrder = service.createOrder(order);
+        return Response.ok(new ResponseDTO<>("Order created", 200, createdOrder)).build();
+    }
+
+    @PATCH
+    @Path("/{id}/status/{status}")
+    public Response update(@PathParam("id") Long id, @PathParam("status") String status) {
+        Orders updatedOrder = service.updateStatus(id, status);
+        return Response.ok(new ResponseDTO<>("Orders updated", 200, updatedOrder)).build();
+    }
+
+    @PATCH
+    @Path("/{id}/cancel")
+    public Response cancel(@PathParam("id") Long id) {
+        Orders updatedOrder = service.cancelOrder(id);
+        return Response.ok(new ResponseDTO<>("Orders updated", 200, updatedOrder)).build();
     }
 
     @GET
-    public List<Orders> listAll() {
-        return ordersService.findAll();
+    public Response listAll() {
+        List<Orders> orderList = service.findAll();
+        return Response.ok(new ResponseDTO<>("Orders retrieved", 200, orderList)).build();
     }
 
     @GET
     @Path("/{id}")
-    public Orders get(@PathParam("id") Long id) {
-        return ordersService.findById(id).orElseThrow(() -> new WebApplicationException("Order not found", 404));
+    public Response get(@PathParam("id") Long id) {
+        Optional<Orders> order = service.findById(id);
+        return Response.ok(new ResponseDTO<>("Orders retrieved", 200, order)).build();
     }
 
-    @PUT
-    @Path("/{id}")
-    public Orders update(@PathParam("id") Long id, Orders order) {
-        return ordersService.updateOrder(id, order);
-    }
-
-    @DELETE
-    @Path("/{id}")
-    public void delete(@PathParam("id") Long id) {
-        ordersService.deleteOrder(id);
-    }
 }

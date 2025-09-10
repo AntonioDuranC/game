@@ -7,194 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "games",
-			"item": [
-				{
-					"name": "get all games",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games?title=&page=0&size=7",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							],
-							"query": [
-								{
-									"key": "title",
-									"value": ""
-								},
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "7"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id game",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create game",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Metal Gear 2\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"stock\": 100,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "replace game",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.99,\r\n  \"stock\": 440,\r\n  \"releaseDate\": \"1992-09-03\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update game",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigii\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete game",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games/2",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"2"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "security",
 			"item": [
 				{
@@ -265,6 +77,194 @@
 			]
 		},
 		{
+			"name": "games",
+			"item": [
+				{
+					"name": "create game",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Metal Slug X\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"stock\": 100,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/games",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "replace game",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.99,\r\n  \"stock\": 440,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/games",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update game",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigi playin Tennis\",\r\n  \"category\": \"SPORTS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/games",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete game",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/games/3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all games",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/games?title=&page=0&size=7",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Id game",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/games/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"games",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "orders",
 			"item": [
 				{
@@ -280,7 +280,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 89.98,\r\n  \"status\": \"PENDING\"\r\n}\r\n",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 7.98,\r\n  \"status\": \"PENDING\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -300,6 +300,109 @@
 					"response": []
 				},
 				{
+					"name": "cancel order",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/3/cancel",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/3/status/ACCEPTED",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3",
+								"status",
+								"ACCEPTED"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Id order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order items",
+			"item": [
+				{
 					"name": "add order item",
 					"request": {
 						"method": "POST",
@@ -312,7 +415,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"gameId\": 3,\r\n  \"quantity\": 20,\r\n  \"price\": 77.99\r\n}\r\n",
+							"raw": "{\r\n  \"gameId\": 1,\r\n  \"quantity\": 550,\r\n  \"price\": 66.99\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -320,14 +423,75 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/orders/1/items",
+							"raw": "{{baseURL}}/orders/3/items",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update quantity",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"price\": 11311.99\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/orders/1/items/2",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
 								"1",
-								"items"
+								"items",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete item order",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/3/items/4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3",
+								"items",
+								"4"
 							]
 						}
 					},
@@ -359,6 +523,37 @@
 					"response": []
 				},
 				{
+					"name": "get Id order item",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/1/items/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
 					"name": "create payment",
 					"request": {
 						"method": "POST",
@@ -371,13 +566,62 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"order\": {\r\n    \"id\": 1\r\n  },\r\n  \"amount\": 56.98,\r\n  \"method\": \"CREDIT_CARD\",\r\n  \"status\": \"PAID\"\r\n}\r\n",
+							"raw": "{\r\n  \"order\": {\r\n    \"id\": 4\r\n  },\r\n  \"amount\": 777.98,\r\n  \"method\": \"CREDIT_CARD\",\r\n  \"status\": \"PAID\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
+						"url": {
+							"raw": "{{baseURL}}/payments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update payment status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/payments/2/status/CANCELLED",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"payments",
+								"2",
+								"status",
+								"CANCELLED"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all payment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{baseURL}}/payments",
 							"host": [
@@ -402,28 +646,19 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/1/payment",
+							"raw": "{{baseURL}}/payments/1",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"orders",
-								"1",
-								"payment"
+								"payments",
+								"1"
 							]
 						}
 					},
 					"response": []
 				}
 			]
-		},
-		{
-			"name": "payments",
-			"item": []
-		},
-		{
-			"name": "order items",
-			"item": []
 		}
 	],
 	"event": [

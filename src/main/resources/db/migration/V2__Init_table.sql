@@ -5,6 +5,7 @@ CREATE TABLE public.games (
       description TEXT,
       price NUMERIC(10,2) NOT NULL,
       stock INT NOT NULL DEFAULT 0,
+      active BOOLEAN NOT NULL DEFAULT TRUE,
       release_date DATE
 );
 

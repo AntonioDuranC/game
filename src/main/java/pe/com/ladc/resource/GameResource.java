@@ -1,7 +1,7 @@
 package pe.com.ladc.resource;
 
 import jakarta.ws.rs.*;
-import pe.com.ladc.util.ResponseModel;
+import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.Games;
 import pe.com.ladc.services.GameService;
 import jakarta.annotation.security.RolesAllowed;
@@ -24,17 +24,21 @@ import java.util.List;
 @Tag(name = "Games")
 public class GameResource {
 
+    private final GameService service;
+
     @Inject
-    GameService gameService;
+    public GameResource(GameService gameService) {
+        this.service = gameService;
+    }
 
     @POST
     @Operation(
             summary = "Create game",
             description = "Create new game.")
     @RolesAllowed("admin")
-    public Response createGame(Games game){
-        gameService.createGame(game);
-        return Response.ok(new ResponseModel("Game created",200)).build();
+    public Response create(Games game){
+        Games createdGame =  service.createGame(game);
+        return Response.ok(new ResponseDTO<>("Game created",200, createdGame)).build();
     }
 
     @PUT
@@ -46,11 +50,11 @@ public class GameResource {
             description = "Return operation data.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseModel.class)))
+                    schema = @Schema(implementation = ResponseDTO.class)))
     @RolesAllowed("admin")
-    public Response replaceGame(Games game){
-        gameService.replaceGame(game.getId(),game.getTitle(),game.getGameCategory().name());
-        return Response.ok(new ResponseModel("Game updated",200)).build();
+    public Response replace(Games game){
+        Games updatedGame = service.replaceGame(game);
+        return Response.ok(new ResponseDTO<>("Game updated",200, updatedGame)).build();
     }
 
     @PATCH
@@ -62,11 +66,11 @@ public class GameResource {
             description = "Game updated successfully.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseModel.class)))
+                    schema = @Schema(implementation = ResponseDTO.class)))
     @RolesAllowed("admin")
-    public Response updateGame(Games game) {
-        gameService.updateGame(game);
-        return Response.ok(new ResponseModel("Game updated", 200)).build();
+    public Response update(Games game) {
+        Games updatedGame = service.updateGame(game);
+        return Response.ok(new ResponseDTO<>("Game updated", 200, updatedGame)).build();
     }
 
     @DELETE
@@ -79,11 +83,11 @@ public class GameResource {
             description = "Return operation data.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseModel.class)))
+                    schema = @Schema(implementation = ResponseDTO.class)))
     @RolesAllowed("admin")
-    public Response deleteGame(@PathParam("id") int id) {
-        gameService.deleteGame(id);
-        return Response.ok(new ResponseModel("Game deleted",200)).build();
+    public Response delete(@PathParam("id") int id) {
+        service.deleteGame(id);
+        return Response.ok(new ResponseDTO<>("Game deleted",204)).build();
     }
 
     @GET
@@ -96,29 +100,16 @@ public class GameResource {
             description = "Paginated list of games",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Games.class, type = SchemaType.ARRAY)
-            )
-    )
-    public Response getGameList(
+                    schema = @Schema(implementation = Games.class, type = SchemaType.ARRAY)))
+    public Response pagedlist(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
-            @QueryParam("title") String title
-    ) {
-        if (page < 0 || size <= 0) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Page and size must be greater than 0")
-                    .build();
-        }
+            @QueryParam("title") String title) {
 
-        List<Games> pagedGames = gameService.findPaginated(page, size, title);
-        long totalGames = gameService.count(title);
-        int start = (page) * size;
+        List<Games> pagedGames = service.findPaginated(page, size, title);
+        long totalGames = service.count(title);
 
-        if (start >= totalGames && totalGames > 0) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        return Response.ok(pagedGames)
+        return Response.ok(new ResponseDTO<>("Games retrieved", 200, pagedGames))
                 .header("X-Total-Count", totalGames)
                 .build();
     }
@@ -139,9 +130,10 @@ public class GameResource {
             description = "Return operation data.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ResponseModel.class)))
-    public Response getGame(@PathParam("id") int id){
-        return Response.ok(gameService.findById(id))
+                    schema = @Schema(implementation = ResponseDTO.class)))
+    public Response get(@PathParam("id") int id){
+        Games game = service.findById(id);
+        return Response.ok(new ResponseDTO<>("Game retrieved", 200, game))
                 .build();
     }
 

@@ -31,7 +31,7 @@ class GameServiceTest {
 
         List<Games> mockGames = List.of(Games.builder()
                 .title("Cyberpunk 2077")
-                .gameCategory(GameCategory.RPG)
+                .category(GameCategory.RPG)
                 .price(new BigDecimal("49.99"))
                 .stock(100)
                 .releaseDate(LocalDate.of(2020, 12, 10))

@@ -42,7 +42,7 @@ public class Games extends PanacheEntityBase {
 
     @Enumerated(EnumType.STRING)
     @Schema(description = "Category of game", example = "RPG")
-    private GameCategory gameCategory;
+    private GameCategory category;
 
     @Schema(description = "Description of the game", example = "A survival strategy game set in a frozen world")
     @Column(length = 500)
@@ -60,6 +60,9 @@ public class Games extends PanacheEntityBase {
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
+    @Schema(description = "Indicates whether the game is active", example = "true")
+    @Column(name = "active")
+    private Boolean active;
 
     public boolean isInStock() {
         return stock != null && stock > 0;

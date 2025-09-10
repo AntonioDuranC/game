@@ -1,23 +1,34 @@
 package pe.com.ladc;
 
-import pe.com.ladc.entity.Games;
-import pe.com.ladc.repository.GamesRepository;
+import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import pe.com.ladc.entity.Games;
+import pe.com.ladc.repository.GamesRepository;
 
 
 @QuarkusTest
-public class GameRepositoryTest {
+class GameRepositoryTest {
 
     @Inject
     GamesRepository repository;
 
     @Test
-    public void testFindById() {
-        Games entity = repository.findById(1L);
-        assertEquals(entity.getId(),1L);
+    @TestTransaction
+    void testFindById() {
+        // 1. Arrange: Create and persist a new Games entity
+        Games game = new Games();
+        game.setTitle("The Witcher 3: Wild Hunt");
+        game.setActive(true);
+        repository.persist(game);
+
+        // 2. Act: Call the method you want to test with the newly created entity's ID
+        Games foundGame = repository.findById(game.getId());
+
+        // 3. Assert: Verify the result
+        Assertions.assertNotNull(foundGame, "The game should not be null.");
+        Assertions.assertEquals(game.getTitle(), foundGame.getTitle(), "Titles should match.");
     }
 }

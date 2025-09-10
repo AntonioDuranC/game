@@ -5,24 +5,28 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import pe.com.ladc.entity.Orders;
 import pe.com.ladc.entity.Payments;
-import pe.com.ladc.enums.PaymentMethod;
 import pe.com.ladc.enums.PaymentStatus;
 import pe.com.ladc.exceptions.InvalidEnumException;
+import pe.com.ladc.exceptions.InvalidOperationException;
 import pe.com.ladc.repository.OrdersRepository;
 import pe.com.ladc.repository.PaymentsRepository;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @ApplicationScoped
 public class PaymentsService {
 
-    @Inject
-    PaymentsRepository paymentsRepository;
+    private final PaymentsRepository paymentsRepository;
+
+    private final OrdersRepository ordersRepository;
 
     @Inject
-    OrdersRepository ordersRepository;
+    public PaymentsService(PaymentsRepository paymentsRepository, OrdersRepository ordersRepository) {
+        this.paymentsRepository = paymentsRepository;
+        this.ordersRepository = ordersRepository;
+    }
+
 
     @Transactional
     public Payments create(Payments payment) {
@@ -32,13 +36,6 @@ public class PaymentsService {
             throw new InvalidEnumException("Order with id " + payment.getOrder().getId() + " not found");
         }
 
-        if (payment.getMethod() == null) {
-            payment.setMethod(PaymentMethod.CREDIT_CARD);
-        }
-        if (payment.getStatus() == null) {
-            payment.setStatus(PaymentStatus.PENDING);
-        }
-
         payment.setOrder(order);
         payment.setPaymentDate(LocalDateTime.now());
 
@@ -46,32 +43,6 @@ public class PaymentsService {
 
         return payment;
     }
-
-
-    @Transactional
-    public Payments update(Payments payment) {
-        Payments paymentUpdated = paymentsRepository.findByIdOptional(payment.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
-
-        if (payment.getMethod() != null && !payment.getMethod().name().isBlank()) {
-            try {
-                paymentUpdated.setMethod(PaymentMethod.valueOf(payment.getMethod().name().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                throw new InvalidEnumException("Invalid payment method: " + payment.getMethod());
-            }
-        }
-
-        if (payment.getStatus() != null && !payment.getStatus().name().isBlank()) {
-            try {
-                paymentUpdated.setStatus(PaymentStatus.valueOf(payment.getStatus().name().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                throw new InvalidEnumException("Invalid payment status: " + payment.getStatus());
-            }
-        }
-
-        return paymentUpdated;
-    }
-
 
     public List<Payments> findAll() {
         return paymentsRepository.listAll();
@@ -83,46 +54,20 @@ public class PaymentsService {
     }
 
     @Transactional
-    public Payments replace(Long id, Payments newPayment) {
-        Payments existing = paymentsRepository.findByIdOptional(id)
-                .orElseThrow(() -> new InvalidEnumException("Payment with id " + id + " not found"));
-
-        existing.setAmount(newPayment.getAmount());
-        existing.setPaymentDate(newPayment.getPaymentDate());
-        existing.setMethod(newPayment.getMethod() != null ? newPayment.getMethod() : existing.getMethod());
-        existing.setStatus(newPayment.getStatus() != null ? newPayment.getStatus() : existing.getStatus());
-
-        paymentsRepository.persist(existing);
-        return existing;
-    }
-
-    @Transactional
     public Payments updateStatus(Long id, String newStatus) {
+        return paymentsRepository.findByIdOptional(id).map(existing -> {
+            existing.setStatus(parseStatus(newStatus));
+            return existing;
+        }).orElseThrow(() -> new InvalidOperationException("Order with id " + id + " does not exist"));
+    }
 
-        Payments existing = paymentsRepository.findByIdOptional(id)
-                .orElseThrow(() -> new InvalidEnumException("Payment with id " + id + " not found"));
-
+    private PaymentStatus parseStatus(String status) {
         try {
-            PaymentStatus statusEnum = PaymentStatus.valueOf(newStatus.toUpperCase());
-            existing.setStatus(statusEnum);
+            return PaymentStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InvalidEnumException(
-                    "Invalid payment status: " + newStatus +
-                            ". Allowed values are: " + Arrays.toString(PaymentStatus.values())
-            );
-        }
-
-        paymentsRepository.persist(existing);
-        return existing;
-    }
-
-
-    @Transactional
-    public void delete(Long id) {
-        boolean deleted = paymentsRepository.deleteById(id);
-        if (!deleted) {
-            throw new InvalidEnumException("Payment with id " + id + " not found");
+            throw new InvalidEnumException(status);
         }
     }
+
 }
 

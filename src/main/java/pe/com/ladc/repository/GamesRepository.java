@@ -8,6 +8,7 @@ import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
@@ -25,9 +26,9 @@ public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
 
         PanacheQuery<Games> query;
         if (title != null && !title.isBlank()) {
-            query = find("title like ?1", sort, "%" + title + "%");
+            query = find("title like ?1 and active = ?2", sort, "%" + title + "%", true);
         } else {
-            query = findAll(sort);
+            query = find("active = ?1", sort, true);
         }
 
         return query.page(Page.of(page, size)).list();
@@ -41,6 +42,10 @@ public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
             return count("title like ?1", "%" + title + "%");
         }
         return count();
+    }
+
+    public Games findById(long id) {
+        return find("id = ?1 and active = true", id).firstResult();
     }
 }
 

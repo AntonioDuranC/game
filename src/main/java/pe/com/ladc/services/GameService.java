@@ -3,92 +3,107 @@ package pe.com.ladc.services;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.entity.Games;
 import pe.com.ladc.exceptions.InvalidEnumException;
-import pe.com.ladc.exceptions.GameDontExistException;
+import pe.com.ladc.exceptions.InvalidOperationException;
 import pe.com.ladc.repository.GamesRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
 @ApplicationScoped
 public class GameService {
 
+    private final GamesRepository repository;
+
     @Inject
-    GamesRepository gamesRepository;
-
-    // 🔹 Paginación con o sin filtro de nombre
-    public List<Games> findPaginated(int page, int pageSize, String title) {
-        return gamesRepository.findPaginated(page, pageSize, "category", title);
+    public GameService(GamesRepository repository) {
+        this.repository = repository;
     }
 
-    // 🔹 Contador con o sin filtro de nombre
-    public long count(String title) {
-        return (title != null && !title.isBlank())
-                ? gamesRepository.countByTitle(title)
-                : gamesRepository.count();
-    }
-
-    // 🔹 Buscar por ID
-    public Optional<Games> findById(long id) {
-        return gamesRepository.findByIdOptional(id);
-    }
 
     // 🔹 Crear nuevo juego
     @Transactional
     public Games createGame(Games game) {
-        gamesRepository.persist(game);
+        game.setActive(true);
+        repository.persist(game);
         return game;
+    }
+
+    // 🔹 Reemplazar juego completo
+    @Transactional
+    public Games replaceGame(Games game) {
+
+        Games existingGame = repository.findByIdOptional(game.getId())
+                .orElseThrow(() -> new InvalidOperationException("Game with id " + game.getId() + " does not exist"));
+
+        existingGame.setTitle(game.getTitle());
+        existingGame.setCategory(game.getCategory());
+        existingGame.setDescription(game.getDescription());
+        existingGame.setPrice(game.getPrice());
+        existingGame.setStock(game.getStock());
+        existingGame.setReleaseDate(game.getReleaseDate());
+
+        repository.persist(existingGame);
+
+        return existingGame;
     }
 
     // 🔹 Eliminar un juego
     @Transactional
     public void deleteGame(long id) {
-        gamesRepository.findByIdOptional(id).ifPresentOrElse(
-                gamesRepository::delete,
-                () -> {
-                    throw new GameDontExistException("Game with id " + id + " does not exist");
-                }
-        );
+        Games game = repository.findByIdOptional(id)
+                .orElseThrow(() -> new InvalidOperationException("Game with id " + id + " does not exist"));
+        game.setActive(false);
+        repository.persist(game);
     }
-
 
     // 🔹 Actualizar parcialmente un juego
     @Transactional
     public Games updateGame(Games game) {
-        return gamesRepository.findByIdOptional(game.getId()).map(existing -> {
+        Games existingGame = repository.findByIdOptional(game.getId())
+                .orElseThrow(() -> new InvalidOperationException("Game with id " + game.getId() + " does not exist"));
 
-            // Actualizamos solo los campos necesarios sobre la misma entidad
-            existing.setTitle(game.getTitle() != null ? game.getTitle() : existing.getTitle());
-            existing.setGameCategory(game.getGameCategory() != null ? game.getGameCategory() : existing.getGameCategory());
-            existing.setDescription(game.getDescription() != null ? game.getDescription() : existing.getDescription());
-            existing.setPrice(game.getPrice() != null ? game.getPrice() : existing.getPrice());
-            existing.setStock(game.getStock() != null ? game.getStock() : existing.getStock());
-            existing.setReleaseDate(game.getReleaseDate() != null ? game.getReleaseDate() : existing.getReleaseDate());
+        if (game.getTitle() != null) {
+            existingGame.setTitle(game.getTitle());
+        }
+        if (game.getCategory() != null) {
+            existingGame.setCategory(parseCategory(game.getCategory().name()));
+        }
+        if (game.getDescription() != null) {
+            existingGame.setDescription(game.getDescription());
+        }
+        if (game.getPrice() != null) {
+            existingGame.setPrice(game.getPrice());
+        }
+        if (game.getStock() != null) {
+            existingGame.setStock(game.getStock());
+        }
+        if (game.getReleaseDate() != null) {
+            existingGame.setReleaseDate(game.getReleaseDate());
+        }
 
-            // Como es una entidad gestionada por Hibernate, no necesitas persistir otra vez
-            return existing;
-        }).orElseThrow(() ->
-                new GameDontExistException("Game with id " + game.getId() + " does not exist"));
+        return existingGame;
     }
 
+    // 🔹 Paginación con o sin filtro de nombre
+    public List<Games> findPaginated(int page, int pageSize, String title) {
+        if (page < 0 || pageSize <= 0) {
+            throw new InvalidOperationException("Page and size must be greater than 0");
+        }
+        return repository.findPaginated(page, pageSize, "category", title);
+    }
 
-    // 🔹 Reemplazar juego completo
-    @Transactional
-    public Games replaceGame(long id, String title, String category) {
-        return gamesRepository.findByIdOptional(id).map(game -> {
-            if (title != null && !title.isBlank()) {
-                game.setTitle(title);
-            }
-            if (category != null && !category.isBlank()) {
-                game.setGameCategory(parseCategory(category));
-            }
-            return game; // cambios ya quedan en contexto persistente
-        }).orElseThrow(() ->
-                new GameDontExistException("Game with id " + id + " does not exist"));
+    // 🔹 Contador con o sin filtro de nombre
+    public long count(String title) {
+        return (title != null && !title.isBlank())
+                ? repository.countByTitle(title)
+                : repository.count();
+    }
+
+    // 🔹 Buscar por ID
+    public Games findById(long id) {
+        return repository.findById(id);
     }
 
     // 🔹 Utilidad: convierte String a Enum con validación
@@ -96,8 +111,8 @@ public class GameService {
         try {
             return GameCategory.valueOf(category.toUpperCase());
         } catch (IllegalArgumentException e) {
-            log.error("Invalid category: {}", category);
             throw new InvalidEnumException(category);
         }
     }
+
 }
