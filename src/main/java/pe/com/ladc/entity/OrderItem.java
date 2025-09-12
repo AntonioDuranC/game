@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItems {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class OrderItems {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     @JsonBackReference // 🔹 evita ciclos al serializar
-    private Orders order;
+    private Order order;
 
     @Column(name = "game_id", nullable = false)
     private Long gameId;

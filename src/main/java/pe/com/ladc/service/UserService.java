@@ -1,4 +1,4 @@
-package pe.com.ladc.services;
+package pe.com.ladc.service;
 
 import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.Users;
@@ -13,9 +13,9 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserService {
 
     @Transactional
-    public void createUser(Users users) {
-        users.setPassword(BCrypt.hashpw(users.getPassword(), BCrypt.gensalt()));
-        Users.persist(users);
+    public void createUser(Users user) {
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        Users.persist(user);
     }
 
     public Response login(String username, String password) {
@@ -23,7 +23,7 @@ public class UserService {
 
         if (users == null || !BCrypt.checkpw(password, users.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(
-                    new ResponseDTO("Invalid username or password",401)).build();
+                    new ResponseDTO<>("Invalid username or password",401)).build();
         }
         String jwt = Jwt.claims()
                 .subject(users.getUsername())
@@ -40,6 +40,6 @@ public class UserService {
                         3600,
                         false,
                         false))
-                .entity(new ResponseDTO("SUCCESS",200)).build();
+                .entity(new ResponseDTO<>("SUCCESS",200)).build();
     }
 }

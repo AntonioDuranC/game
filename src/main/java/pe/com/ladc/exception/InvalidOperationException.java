@@ -1,4 +1,4 @@
-package pe.com.ladc.exceptions;
+package pe.com.ladc.exception;
 
 public class InvalidOperationException extends RuntimeException{
 

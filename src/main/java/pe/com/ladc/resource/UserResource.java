@@ -3,7 +3,7 @@ package pe.com.ladc.resource;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.Users;
-import pe.com.ladc.services.UserService;
+import pe.com.ladc.service.UserService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;

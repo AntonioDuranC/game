@@ -1,30 +1,30 @@
-package pe.com.ladc.services;
+package pe.com.ladc.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import pe.com.ladc.enums.GameCategory;
-import pe.com.ladc.entity.Games;
-import pe.com.ladc.exceptions.InvalidEnumException;
-import pe.com.ladc.exceptions.InvalidOperationException;
-import pe.com.ladc.repository.GamesRepository;
+import pe.com.ladc.entity.Game;
+import pe.com.ladc.exception.InvalidEnumException;
+import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.repository.GameRepository;
 
 import java.util.List;
 
 @ApplicationScoped
 public class GameService {
 
-    private final GamesRepository repository;
+    private final GameRepository repository;
 
     @Inject
-    public GameService(GamesRepository repository) {
+    public GameService(GameRepository repository) {
         this.repository = repository;
     }
 
 
     // 🔹 Crear nuevo juego
     @Transactional
-    public Games createGame(Games game) {
+    public Game createGame(Game game) {
         game.setActive(true);
         repository.persist(game);
         return game;
@@ -32,10 +32,10 @@ public class GameService {
 
     // 🔹 Reemplazar juego completo
     @Transactional
-    public Games replaceGame(Games game) {
+    public Game replaceGame(Game game) {
 
-        Games existingGame = repository.findByIdOptional(game.getId())
-                .orElseThrow(() -> new InvalidOperationException("Game with id " + game.getId() + " does not exist"));
+        Game existingGame = repository.findByIdOptional(game.getId())
+                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
 
         existingGame.setTitle(game.getTitle());
         existingGame.setCategory(game.getCategory());
@@ -52,17 +52,17 @@ public class GameService {
     // 🔹 Eliminar un juego
     @Transactional
     public void deleteGame(long id) {
-        Games game = repository.findByIdOptional(id)
-                .orElseThrow(() -> new InvalidOperationException("Game with id " + id + " does not exist"));
+        Game game = repository.findByIdOptional(id)
+                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + id));
         game.setActive(false);
         repository.persist(game);
     }
 
     // 🔹 Actualizar parcialmente un juego
     @Transactional
-    public Games updateGame(Games game) {
-        Games existingGame = repository.findByIdOptional(game.getId())
-                .orElseThrow(() -> new InvalidOperationException("Game with id " + game.getId() + " does not exist"));
+    public Game updateGame(Game game) {
+        Game existingGame = repository.findByIdOptional(game.getId())
+                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
 
         if (game.getTitle() != null) {
             existingGame.setTitle(game.getTitle());
@@ -87,7 +87,7 @@ public class GameService {
     }
 
     // 🔹 Paginación con o sin filtro de nombre
-    public List<Games> findPaginated(int page, int pageSize, String title) {
+    public List<Game> findPaginated(int page, int pageSize, String title) {
         if (page < 0 || pageSize <= 0) {
             throw new InvalidOperationException("Page and size must be greater than 0");
         }
@@ -102,7 +102,7 @@ public class GameService {
     }
 
     // 🔹 Buscar por ID
-    public Games findById(long id) {
+    public Game findById(long id) {
         return repository.findById(id);
     }
 

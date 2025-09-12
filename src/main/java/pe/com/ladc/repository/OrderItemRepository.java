@@ -2,7 +2,7 @@ package pe.com.ladc.repository;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
-import pe.com.ladc.entity.Payments;
+import pe.com.ladc.entity.OrderItem;
 
 @ApplicationScoped
-public class PaymentsRepository implements PanacheRepositoryBase<Payments, Long> {}
+public class OrderItemRepository implements PanacheRepositoryBase<OrderItem, Long> {}

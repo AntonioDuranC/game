@@ -5,27 +5,27 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pe.com.ladc.entity.Games;
-import pe.com.ladc.repository.GamesRepository;
+import pe.com.ladc.entity.Game;
+import pe.com.ladc.repository.GameRepository;
 
 
 @QuarkusTest
 class GameRepositoryTest {
 
     @Inject
-    GamesRepository repository;
+    GameRepository repository;
 
     @Test
     @TestTransaction
     void testFindById() {
         // 1. Arrange: Create and persist a new Games entity
-        Games game = new Games();
+        Game game = new Game();
         game.setTitle("The Witcher 3: Wild Hunt");
         game.setActive(true);
         repository.persist(game);
 
         // 2. Act: Call the method you want to test with the newly created entity's ID
-        Games foundGame = repository.findById(game.getId());
+        Game foundGame = repository.findById(game.getId());
 
         // 3. Assert: Verify the result
         Assertions.assertNotNull(foundGame, "The game should not be null.");

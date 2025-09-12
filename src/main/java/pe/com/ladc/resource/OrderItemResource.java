@@ -7,9 +7,9 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import pe.com.ladc.dto.ResponseDTO;
-import pe.com.ladc.entity.OrderItems;
-import pe.com.ladc.entity.Orders;
-import pe.com.ladc.services.OrderItemsService;
+import pe.com.ladc.entity.OrderItem;
+import pe.com.ladc.entity.Order;
+import pe.com.ladc.service.OrderItemService;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,20 +18,20 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Order Items")
-public class OrderItemsResource {
+public class OrderItemResource {
 
-    private final OrderItemsService service;
+    private final OrderItemService service;
 
     @Inject
-    public OrderItemsResource(OrderItemsService orderItemsService)    {
+    public OrderItemResource(OrderItemService orderItemsService)    {
         this.service = orderItemsService;
     }
 
     @POST
     @Operation(summary = "Add item to order")
-    public Response addItem(@PathParam("orderId") Long orderId, OrderItems item) {
-        item.setOrder(Orders.builder().id(orderId).build());
-        OrderItems orderItems = service.addItem(item);
+    public Response addItem(@PathParam("orderId") Long orderId, OrderItem item) {
+        item.setOrder(Order.builder().id(orderId).build());
+        OrderItem orderItems = service.addItem(item);
         return Response.ok(new ResponseDTO<>("Item created",200, orderItems)).build();
     }
 
@@ -41,7 +41,7 @@ public class OrderItemsResource {
     public Response patchItem(@PathParam("orderId") Long orderId,
                               @PathParam("itemId") Long itemId,
                               @PathParam("quantity") Integer quantity) {
-        OrderItems orderItems =  service.updateQuantity(orderId, itemId, quantity);
+        OrderItem orderItems =  service.updateQuantity(orderId, itemId, quantity);
         return Response.ok(new ResponseDTO<>("Item updated", 200, orderItems)).build();
     }
 
@@ -57,7 +57,7 @@ public class OrderItemsResource {
     @GET
     @Operation(summary = "List all items of an order")
     public Response listItems(@PathParam("orderId") Long orderId) {
-        List<OrderItems> orderItemsList = service.findByOrderId(orderId);
+        List<OrderItem> orderItemsList = service.findByOrderId(orderId);
         return Response.ok(new ResponseDTO<>("Items retrieved", 200, orderItemsList)).build();
     }
 
@@ -66,7 +66,7 @@ public class OrderItemsResource {
     @Operation(summary = "Get specific item by ID")
     public Response getItem(@PathParam("orderId") Long orderId,
                             @PathParam("itemId") Long itemId) {
-        Optional<OrderItems> orderItems = service.findById(orderId, itemId);
+        Optional<OrderItem> orderItems = service.findById(orderId, itemId);
         return Response.ok(new ResponseDTO<>("Item retrieved", 200, orderItems)).build();
     }
 

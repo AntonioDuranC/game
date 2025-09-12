@@ -1,4 +1,4 @@
-package pe.com.ladc.exceptions;
+package pe.com.ladc.exception;
 
 /**
  * Excepción personalizada para indicar que una categoría de juego no es válida.

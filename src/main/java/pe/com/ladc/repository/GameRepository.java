@@ -1,17 +1,16 @@
 package pe.com.ladc.repository;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import pe.com.ladc.entity.Games;
+import pe.com.ladc.entity.Game;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
-public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
+public class GameRepository implements PanacheRepositoryBase<Game, Long> {
 
     /**
      * Devuelve una lista paginada de juegos.
@@ -21,10 +20,10 @@ public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
      * @param sortBy campo por el que se ordena (default "category")
      * @param title filtro opcional por título (LIKE)
      */
-    public List<Games> findPaginated(int page, int size, String sortBy, String title) {
+    public List<Game> findPaginated(int page, int size, String sortBy, String title) {
         Sort sort = Sort.ascending(sortBy != null ? sortBy : "category");
 
-        PanacheQuery<Games> query;
+        PanacheQuery<Game> query;
         if (title != null && !title.isBlank()) {
             query = find("title like ?1 and active = ?2", sort, "%" + title + "%", true);
         } else {
@@ -44,7 +43,7 @@ public class GamesRepository implements PanacheRepositoryBase<Games, Long> {
         return count();
     }
 
-    public Games findById(long id) {
+    public Game findById(long id) {
         return find("id = ?1 and active = true", id).firstResult();
     }
 }

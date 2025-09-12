@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payments {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +24,7 @@ public class Payments {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, unique = true)
     @JsonBackReference // 🔹 evita ciclos al serializar
-    private Orders order;
+    private Order order;
 
     @Column(nullable = false)
     private BigDecimal amount;
@@ -38,4 +38,14 @@ public class Payments {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    public void validStatus(PaymentStatus newStatus) {
+        if (this.status == PaymentStatus.CANCELLED ||
+                this.status == PaymentStatus.PAID ||
+                this.status == PaymentStatus.REFUNDED) {
+            throw new IllegalArgumentException(
+                    "Cannot change status. Current status is: " + this.status
+            );
+        }
+        this.status = newStatus;
+    }
 }

@@ -92,7 +92,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Metal Slug X\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"stock\": 100,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
+							"raw": "{\r\n  \"title\": \"Metal Slug X\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +124,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.99,\r\n  \"stock\": 440,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.99,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -156,7 +156,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigi playin Tennis\",\r\n  \"category\": \"SPORTS\"\r\n}",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigi playin car\",\r\n  \"category\": \"SPORTS\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,6 +265,171 @@
 			]
 		},
 		{
+			"name": "stock",
+			"item": [
+				{
+					"name": "add stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/stock/1/add?quantity=10",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"stock",
+								"1",
+								"add"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reserve stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/stock/1/reserve?quantity=5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"stock",
+								"1",
+								"reserve"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "release stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/stock/1/release?quantity=5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"stock",
+								"1",
+								"release"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirm stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/stock/1/confirm?quantity=5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"stock",
+								"1",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "orders",
 			"item": [
 				{
@@ -300,31 +465,6 @@
 					"response": []
 				},
 				{
-					"name": "cancel order",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/3/cancel",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"3",
-								"cancel"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "change status",
 					"request": {
 						"method": "PATCH",
@@ -345,6 +485,31 @@
 								"3",
 								"status",
 								"ACCEPTED"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel order",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/3/cancel",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"3",
+								"cancel"
 							]
 						}
 					},

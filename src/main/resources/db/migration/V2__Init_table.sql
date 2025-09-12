@@ -4,9 +4,17 @@ CREATE TABLE public.games (
       category VARCHAR(255) NOT NULL,
       description TEXT,
       price NUMERIC(10,2) NOT NULL,
-      stock INT NOT NULL DEFAULT 0,
       active BOOLEAN NOT NULL DEFAULT TRUE,
       release_date DATE
+);
+
+CREATE TABLE public.game_stock (
+    id SERIAL PRIMARY KEY,
+    game_id INT NOT NULL REFERENCES public.games(id) ON DELETE CASCADE,
+    total_stock INT NOT NULL DEFAULT 0,
+    reserved_stock INT NOT NULL DEFAULT 0,
+    available_stock INT GENERATED ALWAYS AS (total_stock - reserved_stock) STORED,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.orders (

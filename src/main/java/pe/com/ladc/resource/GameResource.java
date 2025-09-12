@@ -2,8 +2,8 @@ package pe.com.ladc.resource;
 
 import jakarta.ws.rs.*;
 import pe.com.ladc.dto.ResponseDTO;
-import pe.com.ladc.entity.Games;
-import pe.com.ladc.services.GameService;
+import pe.com.ladc.entity.Game;
+import pe.com.ladc.service.GameService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
@@ -36,8 +36,8 @@ public class GameResource {
             summary = "Create game",
             description = "Create new game.")
     @RolesAllowed("admin")
-    public Response create(Games game){
-        Games createdGame =  service.createGame(game);
+    public Response create(Game game){
+        Game createdGame =  service.createGame(game);
         return Response.ok(new ResponseDTO<>("Game created",200, createdGame)).build();
     }
 
@@ -52,8 +52,8 @@ public class GameResource {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ResponseDTO.class)))
     @RolesAllowed("admin")
-    public Response replace(Games game){
-        Games updatedGame = service.replaceGame(game);
+    public Response replace(Game game){
+        Game updatedGame = service.replaceGame(game);
         return Response.ok(new ResponseDTO<>("Game updated",200, updatedGame)).build();
     }
 
@@ -68,8 +68,8 @@ public class GameResource {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ResponseDTO.class)))
     @RolesAllowed("admin")
-    public Response update(Games game) {
-        Games updatedGame = service.updateGame(game);
+    public Response update(Game game) {
+        Game updatedGame = service.updateGame(game);
         return Response.ok(new ResponseDTO<>("Game updated", 200, updatedGame)).build();
     }
 
@@ -100,13 +100,13 @@ public class GameResource {
             description = "Paginated list of games",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Games.class, type = SchemaType.ARRAY)))
+                    schema = @Schema(implementation = Game.class, type = SchemaType.ARRAY)))
     public Response pagedlist(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
             @QueryParam("title") String title) {
 
-        List<Games> pagedGames = service.findPaginated(page, size, title);
+        List<Game> pagedGames = service.findPaginated(page, size, title);
         long totalGames = service.count(title);
 
         return Response.ok(new ResponseDTO<>("Games retrieved", 200, pagedGames))
@@ -124,7 +124,7 @@ public class GameResource {
             description = "Return game.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Games.class)))
+                    schema = @Schema(implementation = Game.class)))
     @APIResponse(
             responseCode = "400",
             description = "Return operation data.",
@@ -132,7 +132,7 @@ public class GameResource {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ResponseDTO.class)))
     public Response get(@PathParam("id") int id){
-        Games game = service.findById(id);
+        Game game = service.findById(id);
         return Response.ok(new ResponseDTO<>("Game retrieved", 200, game))
                 .build();
     }

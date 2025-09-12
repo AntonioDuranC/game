@@ -1,46 +1,46 @@
-package pe.com.ladc.services;
+package pe.com.ladc.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import pe.com.ladc.entity.Orders;
+import pe.com.ladc.entity.Order;
 import pe.com.ladc.enums.OrderStatus;
-import pe.com.ladc.exceptions.InvalidEnumException;
-import pe.com.ladc.exceptions.InvalidOperationException;
-import pe.com.ladc.repository.OrdersRepository;
+import pe.com.ladc.exception.InvalidEnumException;
+import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.repository.OrderRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class OrdersService {
+public class OrderService {
 
-    private final OrdersRepository repository;
+    private final OrderRepository repository;
 
     @Inject
-    public OrdersService(OrdersRepository repository) {
+    public OrderService(OrderRepository repository) {
         this.repository = repository;
     }
 
 
-    public Optional<Orders> findById(Long id) {
+    public Optional<Order> findById(Long id) {
         return repository.findByIdOptional(id);
     }
 
-    public List<Orders> findAll() {
+    public List<Order> findAll() {
         return repository.listAll();
     }
 
 
     @Transactional
-    public Orders createOrder(Orders order) {
+    public Order createOrder(Order order) {
         parseStatus(order.getStatus().name());
         repository.persist(order);
         return order;
     }
 
     @Transactional
-    public Orders cancelOrder(Long id) {
+    public Order cancelOrder(Long id) {
         return repository.findByIdOptional(id).map(existing -> {
             existing.setStatus(OrderStatus.CANCELLED);
             return existing;
@@ -48,7 +48,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public Orders updateStatus(Long id, String newStatus) {
+    public Order updateStatus(Long id, String newStatus) {
         return repository.findByIdOptional(id).map(existing -> {
             existing.setStatus(parseStatus(newStatus));
             return existing;
