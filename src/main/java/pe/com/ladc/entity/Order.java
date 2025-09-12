@@ -3,9 +3,12 @@ package pe.com.ladc.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import pe.com.ladc.enums.OrderStatus;
+import pe.com.ladc.exception.InvalidOperationException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import static pe.com.ladc.enums.OrderStatus.*;
 
 @Entity
 @Table(name = "orders")
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,4 +35,31 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    public void cancel() {
+        if (this.status == OrderStatus.CANCELLED ||
+                this.status == OrderStatus.DELIVERED) {
+            throw new InvalidOperationException("Order cannot be cancelled. Current status: " + this.status);
+        }
+        this.status = OrderStatus.CANCELLED;
+    }
+
+    public void updateStatus(OrderStatus newStatus) {
+        if (this.status == OrderStatus.CANCELLED) {
+            throw new InvalidOperationException("Cancelled orders cannot change status.");
+        }
+        this.status = newStatus;
+    }
+
+    public void validUpdateStatus() {
+        if (this.status != OrderStatus.DRAFT) {
+            throw new InvalidOperationException("Order cannot be cancelled. Current status: " + this.status);
+        }
+    }
+
+    public boolean validDeleteItem() {
+        return switch (this.getStatus()) {
+            case ACCEPTED, PROCESSING, SHIPPED, DELIVERED -> false;
+            default -> true;
+        };
+    }
 }

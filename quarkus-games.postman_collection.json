@@ -731,7 +731,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"order\": {\r\n    \"id\": 4\r\n  },\r\n  \"amount\": 777.98,\r\n  \"method\": \"CREDIT_CARD\",\r\n  \"status\": \"PAID\"\r\n}\r\n",
+							"raw": "{\r\n    \"orderId\": 2,\r\n    \"amount\": 59.99,\r\n    \"method\": \"CREDIT_CARD\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -762,7 +762,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/payments/2/status/CANCELLED",
+							"raw": "{{baseURL}}/payments/2/status/PAID",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -770,7 +770,7 @@
 								"payments",
 								"2",
 								"status",
-								"CANCELLED"
+								"PAID"
 							]
 						}
 					},

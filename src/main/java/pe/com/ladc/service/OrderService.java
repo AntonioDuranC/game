@@ -3,14 +3,19 @@ package pe.com.ladc.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import pe.com.ladc.dto.OrderRequestDTO;
+import pe.com.ladc.dto.OrderResponseDTO;
 import pe.com.ladc.entity.Order;
 import pe.com.ladc.enums.OrderStatus;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.mapper.OrderMapper;
 import pe.com.ladc.repository.OrderRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class OrderService {
@@ -22,37 +27,48 @@ public class OrderService {
         this.repository = repository;
     }
 
-
-    public Optional<Order> findById(Long id) {
-        return repository.findByIdOptional(id);
+    public Optional<OrderResponseDTO> findById(Long id) {
+        return repository.findByIdOptional(id).map(OrderMapper::toResponse);
     }
 
-    public List<Order> findAll() {
-        return repository.listAll();
+    public List<OrderResponseDTO> findAll() {
+        return repository.listAll()
+                .stream()
+                .map(OrderMapper::toResponse)
+                .collect(Collectors.toList());
     }
-
 
     @Transactional
-    public Order createOrder(Order order) {
-        parseStatus(order.getStatus().name());
+    public OrderResponseDTO createOrder(OrderRequestDTO dto) {
+        Order order = Order.builder()
+                .userId(dto.getUserId())
+                .total(dto.getTotal())
+                .orderDate(LocalDateTime.now())
+                .status(OrderStatus.PENDING)
+                .build();
+
         repository.persist(order);
-        return order;
+        return OrderMapper.toResponse(order);
     }
 
     @Transactional
-    public Order cancelOrder(Long id) {
-        return repository.findByIdOptional(id).map(existing -> {
-            existing.setStatus(OrderStatus.CANCELLED);
-            return existing;
-        }).orElseThrow(() -> new InvalidOperationException("Order with id " + id + " does not exist"));
+    public OrderResponseDTO cancelOrder(Long id) {
+        return repository.findByIdOptional(id)
+                .map(existing -> {
+                    existing.cancel(); // ✅ lógica en entity
+                    return OrderMapper.toResponse(existing);
+                })
+                .orElseThrow(() -> new InvalidOperationException("Order does not exist with id " + id));
     }
 
     @Transactional
-    public Order updateStatus(Long id, String newStatus) {
-        return repository.findByIdOptional(id).map(existing -> {
-            existing.setStatus(parseStatus(newStatus));
-            return existing;
-        }).orElseThrow(() -> new InvalidOperationException("Order with id " + id + " does not exist"));
+    public OrderResponseDTO updateStatus(Long id, String newStatus) {
+        return repository.findByIdOptional(id)
+                .map(existing -> {
+                    existing.updateStatus(parseStatus(newStatus)); // ✅ lógica en entity
+                    return OrderMapper.toResponse(existing);
+                })
+                .orElseThrow(() -> new InvalidOperationException("Order does not exist with id " + id));
     }
 
     private OrderStatus parseStatus(String status) {
@@ -63,4 +79,3 @@ public class OrderService {
         }
     }
 }
-

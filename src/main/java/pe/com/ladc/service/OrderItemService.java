@@ -3,36 +3,40 @@ package pe.com.ladc.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.entity.OrderItem;
 import pe.com.ladc.entity.Order;
-import pe.com.ladc.enums.OrderStatus;
 import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.mapper.OrderMapper;
 import pe.com.ladc.repository.OrderItemRepository;
 import pe.com.ladc.repository.OrderRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 public class OrderItemService {
 
-    private final OrderItemRepository orderItemsRepository;
-
-    private final OrderRepository ordersRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
 
     @Inject
     public OrderItemService(OrderItemRepository orderItemsRepository, OrderRepository ordersRepository) {
-        this.orderItemsRepository = orderItemsRepository;
-        this.ordersRepository = ordersRepository;
+        this.orderItemRepository = orderItemsRepository;
+        this.orderRepository = ordersRepository;
     }
-
 
     /**
      * Add a new item to an order
      */
     @Transactional
-    public OrderItem addItem(OrderItem item) {
+    public OrderItemResponseDTO addItem(OrderItem item) {
+        log.info("item: {}", item.toString());
+
         if (item.getQuantity() == null || item.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
@@ -40,46 +44,55 @@ public class OrderItemService {
             throw new IllegalArgumentException("Price must be greater than 0");
         }
 
-        orderItemsRepository.persist(item);
-        return item;
+        Order order = orderRepository.findByIdOptional(item.getId())
+                .orElseThrow(() -> new InvalidOperationException("Order not found " + item.getId()));
+        item.setOrder(order);
+
+        orderItemRepository.persist(item);
+        return OrderMapper.toResponse(item);
     }
 
     /**
      * List all items of an order
      */
-    public List<OrderItem> findByOrderId(Long orderId) {
-        return orderItemsRepository.list("order.id", orderId);
+    public List<OrderItemResponseDTO> findByOrderId(Long orderId) {
+        return orderItemRepository.list("order.id", orderId).stream()
+                .map(OrderMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     /**
      * Find a specific item by order and item id
      */
-    public Optional<OrderItem> findById(Long orderId, Long itemId) {
-        return orderItemsRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
-                .firstResultOptional();
+    public Optional<OrderItemResponseDTO> findById(Long orderId, Long itemId) {
+        return orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
+                .firstResultOptional()
+                .map(OrderMapper::toResponse);
     }
 
     /**
      * Partial update quantity when status is PENDING
      */
     @Transactional
-    public OrderItem updateQuantity(Long orderId, Long itemId, Integer quantity) {
+    public OrderItemResponseDTO updateQuantity(Long orderId, Long itemId, Integer quantity) {
         if (quantity <= 0) {
             throw new InvalidOperationException("Quantity invalid");
         }
 
-        Order order = ordersRepository.findByIdOptional(orderId)
+        Order order = orderRepository.findByIdOptional(orderId)
                 .orElseThrow(() -> new InvalidOperationException("Order " + orderId + " not found"));
 
-        if (order.getStatus() != OrderStatus.PENDING) {
-            throw new InvalidOperationException("Cannot update items from order in status: " + order.getStatus());
-        }
+        order.validUpdateStatus();
 
-        return findById(orderId, itemId).map(existing -> {
-            existing.setQuantity(quantity);
-            return existing;
-        }).orElseThrow(
-                () -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
+        OrderItem updated = orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
+                .firstResultOptional()
+                .map(existing -> {
+                    existing.setQuantity(quantity);
+                    return existing;
+                }).orElseThrow(
+                        () -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
+
+        return OrderMapper.toResponse(updated);
     }
 
     /**
@@ -87,21 +100,16 @@ public class OrderItemService {
      */
     @Transactional
     public void deleteItem(Long orderId, Long itemId) {
-        Order order = ordersRepository.findByIdOptional(orderId)
+        Order order = orderRepository.findByIdOptional(orderId)
                 .orElseThrow(() -> new InvalidOperationException("Order " + orderId + " not found"));
 
-        switch (order.getStatus()) {
-            case ACCEPTED, PROCESSING, SHIPPED, DELIVERED ->
-                throw new InvalidOperationException("Cannot delete items from order in status: " + order.getStatus());
-
-            default ->
-                findById(orderId, itemId).ifPresentOrElse(orderItemsRepository::delete,
-                    () -> { throw new InvalidOperationException("Item " + itemId + " not found for order " + orderId); }
-                );
+        if (order.validDeleteItem()) {
+            orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
+                    .firstResultOptional()
+                    .ifPresentOrElse(orderItemRepository::delete,
+                            () -> { throw new InvalidOperationException(
+                                    "Item " + itemId + " not found for order " + orderId); }
+                    );
         }
-
-
     }
 }
-
-

@@ -10,6 +10,7 @@ import pe.com.ladc.entity.Payment;
 import pe.com.ladc.enums.PaymentStatus;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.mapper.OrderMapper;
 import pe.com.ladc.repository.OrderRepository;
 import pe.com.ladc.repository.PaymentRepository;
 
@@ -43,13 +44,13 @@ public class PaymentService {
                 .order(order)
                 .amount(request.getAmount())
                 .method(request.getMethod())
-                .status(PaymentStatus.PENDING) // default when created
+                .status(PaymentStatus.PENDING)
                 .paymentDate(LocalDateTime.now())
                 .build();
 
         paymentRepository.persist(payment);
 
-        return toResponseDTO(payment);
+        return OrderMapper.toResponse(payment);
     }
 
     /**
@@ -58,7 +59,7 @@ public class PaymentService {
     public List<PaymentResponseDTO> findAll() {
         return paymentRepository.listAll()
                 .stream()
-                .map(this::toResponseDTO)
+                .map(OrderMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +68,7 @@ public class PaymentService {
      */
     public PaymentResponseDTO findById(Long id) {
         return paymentRepository.findByIdOptional(id)
-                .map(this::toResponseDTO)
+                .map(OrderMapper::toResponse)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
     }
 
@@ -78,21 +79,11 @@ public class PaymentService {
     public PaymentResponseDTO updateStatus(Long id, String newStatus) {
         return paymentRepository.findByIdOptional(id).map(existing -> {
             existing.validStatus(parseStatus(newStatus));
-            return toResponseDTO(existing);
+            return OrderMapper.toResponse(existing);
         }).orElseThrow(() -> new InvalidOperationException("Order no found with id " + id));
     }
 
 
-    private PaymentResponseDTO toResponseDTO(Payment payment) {
-        return PaymentResponseDTO.builder()
-                .id(payment.getId())
-                .orderId(payment.getOrder().getId())
-                .amount(payment.getAmount())
-                .paymentDate(payment.getPaymentDate())
-                .method(payment.getMethod())
-                .status(payment.getStatus())
-                .build();
-    }
 
     private PaymentStatus parseStatus(String status) {
         try {

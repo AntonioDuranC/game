@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {
@@ -33,4 +34,5 @@ public class OrderItem {
 
     @Column(nullable = false)
     private BigDecimal price;
+
 }
