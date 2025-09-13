@@ -3,10 +3,12 @@ package pe.com.ladc.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import pe.com.ladc.dto.GameResponseDTO;
 import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.entity.Game;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
+import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.GameRepository;
 
 import java.util.List;
@@ -21,19 +23,27 @@ public class GameService {
         this.repository = repository;
     }
 
-
-    // 🔹 Crear nuevo juego
     @Transactional
-    public Game createGame(Game game) {
+    public GameResponseDTO createGame(Game game) {
+        boolean exists = repository.find("title = ?1 and category = ?2", game.getTitle(), game.getCategory())
+                .firstResultOptional()
+                .isPresent();
+
+        if (exists) {
+            throw new InvalidOperationException(
+                    "A game with title '" + game.getTitle() + "' and category '" + game.getCategory() + "' already exists."
+            );
+        }
+
         game.setActive(true);
         repository.persist(game);
-        return game;
+
+        return GameMapper.toResponse(game);
     }
 
-    // 🔹 Reemplazar juego completo
-    @Transactional
-    public Game replaceGame(Game game) {
 
+    @Transactional
+    public GameResponseDTO replaceGame(Game game) {
         Game existingGame = repository.findByIdOptional(game.getId())
                 .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
 
@@ -46,10 +56,9 @@ public class GameService {
 
         repository.persist(existingGame);
 
-        return existingGame;
+        return GameMapper.toResponse(existingGame);
     }
 
-    // 🔹 Eliminar un juego
     @Transactional
     public void deleteGame(long id) {
         Game game = repository.findByIdOptional(id)
@@ -58,9 +67,8 @@ public class GameService {
         repository.persist(game);
     }
 
-    // 🔹 Actualizar parcialmente un juego
     @Transactional
-    public Game updateGame(Game game) {
+    public GameResponseDTO updateGame(Game game) {
         Game existingGame = repository.findByIdOptional(game.getId())
                 .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
 
@@ -83,30 +91,31 @@ public class GameService {
             existingGame.setReleaseDate(game.getReleaseDate());
         }
 
-        return existingGame;
+        return GameMapper.toResponse(existingGame);
     }
 
-    // 🔹 Paginación con o sin filtro de nombre
-    public List<Game> findPaginated(int page, int pageSize, String title) {
+    public List<GameResponseDTO> findPaginated(int page, int pageSize, String title) {
         if (page < 0 || pageSize <= 0) {
             throw new InvalidOperationException("Page and size must be greater than 0");
         }
-        return repository.findPaginated(page, pageSize, "category", title);
+        return repository.findPaginated(page, pageSize, "category", title)
+                .stream()
+                .map(GameMapper::toResponse)
+                .toList();
     }
 
-    // 🔹 Contador con o sin filtro de nombre
     public long count(String title) {
         return (title != null && !title.isBlank())
                 ? repository.countByTitle(title)
                 : repository.count();
     }
 
-    // 🔹 Buscar por ID
-    public Game findById(long id) {
-        return repository.findById(id);
+    public GameResponseDTO findById(long id) {
+        Game game = repository.findByIdOptional(id)
+                .orElseThrow(() -> new InvalidOperationException("Game not found with id " + id));
+        return GameMapper.toResponse(game);
     }
 
-    // 🔹 Utilidad: convierte String a Enum con validación
     private GameCategory parseCategory(String category) {
         try {
             return GameCategory.valueOf(category.toUpperCase());

@@ -8,7 +8,7 @@ import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.entity.OrderItem;
 import pe.com.ladc.entity.Order;
 import pe.com.ladc.exception.InvalidOperationException;
-import pe.com.ladc.mapper.OrderMapper;
+import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.OrderItemRepository;
 import pe.com.ladc.repository.OrderRepository;
 
@@ -34,7 +34,10 @@ public class OrderItemService {
      * Add a new item to an order
      */
     @Transactional
-    public OrderItemResponseDTO addItem(OrderItem item) {
+    public OrderItemResponseDTO addItem(Long orderId, OrderItem item) {
+        item.setOrder(Order.builder()
+                .id(orderId)
+                .build());
         log.info("item: {}", item.toString());
 
         if (item.getQuantity() == null || item.getQuantity() <= 0) {
@@ -44,12 +47,12 @@ public class OrderItemService {
             throw new IllegalArgumentException("Price must be greater than 0");
         }
 
-        Order order = orderRepository.findByIdOptional(item.getId())
+        Order order = orderRepository.findByIdOptional(item.getOrder().getId())
                 .orElseThrow(() -> new InvalidOperationException("Order not found " + item.getId()));
         item.setOrder(order);
 
         orderItemRepository.persist(item);
-        return OrderMapper.toResponse(item);
+        return GameMapper.toResponse(item);
     }
 
     /**
@@ -57,7 +60,7 @@ public class OrderItemService {
      */
     public List<OrderItemResponseDTO> findByOrderId(Long orderId) {
         return orderItemRepository.list("order.id", orderId).stream()
-                .map(OrderMapper::toResponse)
+                .map(GameMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +70,7 @@ public class OrderItemService {
     public Optional<OrderItemResponseDTO> findById(Long orderId, Long itemId) {
         return orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
                 .firstResultOptional()
-                .map(OrderMapper::toResponse);
+                .map(GameMapper::toResponse);
     }
 
     /**
@@ -82,7 +85,7 @@ public class OrderItemService {
         Order order = orderRepository.findByIdOptional(orderId)
                 .orElseThrow(() -> new InvalidOperationException("Order " + orderId + " not found"));
 
-        order.validUpdateStatus();
+        order.validStatusItem();
 
         OrderItem updated = orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
                 .firstResultOptional()
@@ -92,7 +95,7 @@ public class OrderItemService {
                 }).orElseThrow(
                         () -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
 
-        return OrderMapper.toResponse(updated);
+        return GameMapper.toResponse(updated);
     }
 
     /**

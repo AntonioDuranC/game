@@ -15,6 +15,7 @@ import static pe.com.ladc.enums.OrderStatus.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -38,7 +39,8 @@ public class Order {
     public void cancel() {
         if (this.status == OrderStatus.CANCELLED ||
                 this.status == OrderStatus.DELIVERED) {
-            throw new InvalidOperationException("Order cannot be cancelled. Current status: " + this.status);
+            throw new InvalidOperationException(
+                    "Order cannot be cancelled. Current status: " + this.status);
         }
         this.status = OrderStatus.CANCELLED;
     }
@@ -50,9 +52,11 @@ public class Order {
         this.status = newStatus;
     }
 
-    public void validUpdateStatus() {
-        if (this.status != OrderStatus.DRAFT) {
-            throw new InvalidOperationException("Order cannot be cancelled. Current status: " + this.status);
+    public void validStatusItem() {
+        if (this.status != PENDING) {
+            throw new InvalidOperationException(
+                    "Cannot update item quantity. Current order status: " + this.status
+            );
         }
     }
 

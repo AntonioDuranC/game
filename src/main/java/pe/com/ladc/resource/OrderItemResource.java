@@ -9,7 +9,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.dto.ResponseDTO;
 import pe.com.ladc.entity.OrderItem;
-import pe.com.ladc.entity.Order;
 import pe.com.ladc.service.OrderItemService;
 
 import java.util.List;
@@ -28,11 +27,11 @@ public class OrderItemResource {
         this.service = orderItemsService;
     }
 
+
     @POST
     @Operation(summary = "Add item to order")
     public Response addItem(@PathParam("orderId") Long orderId, OrderItem item) {
-        item.setOrder(Order.builder().id(orderId).build());
-        OrderItemResponseDTO orderItem = service.addItem(item);
+        OrderItemResponseDTO orderItem = service.addItem(orderId, item);
         return Response.ok(new ResponseDTO<>("Item created",200, orderItem)).build();
     }
 

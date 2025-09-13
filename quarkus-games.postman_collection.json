@@ -92,7 +92,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Metal Slug X\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
+							"raw": "{\r\n  \"title\": \"Metal Slug XI\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,7 +445,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 7.98,\r\n  \"status\": \"PENDING\"\r\n}\r\n",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 7.98\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -476,13 +476,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/3/status/ACCEPTED",
+							"raw": "{{baseURL}}/orders/1/status/ACCEPTED",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
-								"3",
+								"1",
 								"status",
 								"ACCEPTED"
 							]
@@ -502,38 +502,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/3/cancel",
+							"raw": "{{baseURL}}/orders/1/cancel",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
-								"3",
+								"1",
 								"cancel"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id order",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/3",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"3"
 							]
 						}
 					},
@@ -561,6 +537,30 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get Id order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/orders/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -580,7 +580,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"gameId\": 1,\r\n  \"quantity\": 550,\r\n  \"price\": 66.99\r\n}\r\n",
+							"raw": "{\r\n  \"gameId\": 3,\r\n  \"quantity\": 10,\r\n  \"price\": 66.99\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -588,13 +588,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/orders/3/items",
+							"raw": "{{baseURL}}/orders/1/items",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
-								"3",
+								"1",
 								"items"
 							]
 						}
@@ -612,17 +612,8 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"price\": 11311.99\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{baseURL}}/orders/1/items/2",
+							"raw": "{{baseURL}}/orders/1/items/2/quantity/15",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -630,7 +621,9 @@
 								"orders",
 								"1",
 								"items",
-								"2"
+								"2",
+								"quantity",
+								"15"
 							]
 						}
 					},
@@ -648,15 +641,15 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/3/items/4",
+							"raw": "{{baseURL}}/orders/1/items/9",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
-								"3",
+								"1",
 								"items",
-								"4"
+								"9"
 							]
 						}
 					},
@@ -699,7 +692,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/1/items/1",
+							"raw": "{{baseURL}}/orders/1/items/2",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -707,7 +700,7 @@
 								"orders",
 								"1",
 								"items",
-								"1"
+								"2"
 							]
 						}
 					},

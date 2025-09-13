@@ -10,7 +10,7 @@ import pe.com.ladc.entity.Payment;
 import pe.com.ladc.enums.PaymentStatus;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
-import pe.com.ladc.mapper.OrderMapper;
+import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.OrderRepository;
 import pe.com.ladc.repository.PaymentRepository;
 
@@ -50,7 +50,7 @@ public class PaymentService {
 
         paymentRepository.persist(payment);
 
-        return OrderMapper.toResponse(payment);
+        return GameMapper.toResponse(payment);
     }
 
     /**
@@ -59,7 +59,7 @@ public class PaymentService {
     public List<PaymentResponseDTO> findAll() {
         return paymentRepository.listAll()
                 .stream()
-                .map(OrderMapper::toResponse)
+                .map(GameMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -68,7 +68,7 @@ public class PaymentService {
      */
     public PaymentResponseDTO findById(Long id) {
         return paymentRepository.findByIdOptional(id)
-                .map(OrderMapper::toResponse)
+                .map(GameMapper::toResponse)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
     }
 
@@ -79,7 +79,7 @@ public class PaymentService {
     public PaymentResponseDTO updateStatus(Long id, String newStatus) {
         return paymentRepository.findByIdOptional(id).map(existing -> {
             existing.validStatus(parseStatus(newStatus));
-            return OrderMapper.toResponse(existing);
+            return GameMapper.toResponse(existing);
         }).orElseThrow(() -> new InvalidOperationException("Order no found with id " + id));
     }
 

@@ -1,15 +1,40 @@
 package pe.com.ladc.mapper;
 
+import pe.com.ladc.dto.GameResponseDTO;
 import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.dto.OrderResponseDTO;
 import pe.com.ladc.dto.PaymentResponseDTO;
+import pe.com.ladc.entity.Game;
 import pe.com.ladc.entity.Order;
 import pe.com.ladc.entity.OrderItem;
 import pe.com.ladc.entity.Payment;
 
-public class OrderMapper {
+public class GameMapper {
+
+    private GameMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static GameResponseDTO toResponse(Game game) {
+        if (game == null) return null;
+
+        return GameResponseDTO.builder()
+                .id(game.getId())
+                .title(game.getTitle())
+                .category(game.getCategory())
+                .description(game.getDescription())
+                .price(game.getPrice())
+                .releaseDate(game.getReleaseDate())
+                .active(game.getActive())
+                .availableStock(
+                        game.getStock() != null ? game.getStock().getAvailableStock() : 0
+                )
+                .build();
+    }
 
     public static OrderResponseDTO toResponse(Order order) {
+        if (order == null) return null;
+
         return OrderResponseDTO.builder()
                 .id(order.getId())
                 .userId(order.getUserId())
@@ -20,6 +45,8 @@ public class OrderMapper {
     }
 
     public static PaymentResponseDTO toResponse(Payment payment) {
+        if (payment == null) return null;
+
         return PaymentResponseDTO.builder()
                 .id(payment.getId())
                 .orderId(payment.getOrder().getId())
@@ -31,11 +58,15 @@ public class OrderMapper {
     }
 
     public static OrderItemResponseDTO toResponse(OrderItem item) {
+        if (item == null) return null;
+
         return OrderItemResponseDTO.builder()
                 .id(item.getId())
+                .orderId(item.getOrder().getId())
                 .gameId(item.getGameId())
                 .quantity(item.getQuantity())
                 .price(item.getPrice())
                 .build();
     }
+
 }

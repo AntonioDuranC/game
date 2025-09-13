@@ -13,6 +13,7 @@ import java.util.Base64;
 public class JwtKeyGenerator {
 
     public static void main(String[] args) throws Exception {
+
         // 1. Generar par de llaves RSA
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(2048);
@@ -25,11 +26,11 @@ public class JwtKeyGenerator {
         savePem("privateKey.pem", "PRIVATE KEY", privateKey.getEncoded());
         savePem("publicKey.pem", "PUBLIC KEY", publicKey.getEncoded());
 
-        System.out.println("✅ Llaves generadas: privateKey.pem y publicKey.pem");
+        System.out.println("✅ Llaves generadas: privateKey.pem y publicKey.pem\n");
 
         // 3. Calcular expiración (12 horas desde ahora)
         Instant now = Instant.now();
-        Instant exp = now.plusSeconds(7 * 12 * 60 * 60); // 12 horas = 43200 segundos
+        Instant exp = now.plusSeconds(7 * 12 * 60 * 60); // 84 horas
 
         // 4. Generar un JWT con SmallRye
         String token = Jwt.issuer("http://localhost:8080")

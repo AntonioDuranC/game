@@ -3,12 +3,7 @@ package pe.com.ladc.enums;
 public enum OrderStatus {
 
     /**
-     * La orden ha sido creada pero aún no se ha enviado para su procesamiento.
-     */
-    DRAFT,
-
-    /**
-     * La orden ha sido enviada y está a la espera de confirmación.
+     * La orden ha sido creada pero esta pendiente para su procesamiento.
      */
     PENDING,
 

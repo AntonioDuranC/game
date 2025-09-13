@@ -9,7 +9,7 @@ import pe.com.ladc.entity.Order;
 import pe.com.ladc.enums.OrderStatus;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
-import pe.com.ladc.mapper.OrderMapper;
+import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.OrderRepository;
 
 import java.time.LocalDateTime;
@@ -28,13 +28,13 @@ public class OrderService {
     }
 
     public Optional<OrderResponseDTO> findById(Long id) {
-        return repository.findByIdOptional(id).map(OrderMapper::toResponse);
+        return repository.findByIdOptional(id).map(GameMapper::toResponse);
     }
 
     public List<OrderResponseDTO> findAll() {
         return repository.listAll()
                 .stream()
-                .map(OrderMapper::toResponse)
+                .map(GameMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +48,7 @@ public class OrderService {
                 .build();
 
         repository.persist(order);
-        return OrderMapper.toResponse(order);
+        return GameMapper.toResponse(order);
     }
 
     @Transactional
@@ -56,7 +56,7 @@ public class OrderService {
         return repository.findByIdOptional(id)
                 .map(existing -> {
                     existing.cancel(); // ✅ lógica en entity
-                    return OrderMapper.toResponse(existing);
+                    return GameMapper.toResponse(existing);
                 })
                 .orElseThrow(() -> new InvalidOperationException("Order does not exist with id " + id));
     }
@@ -66,7 +66,7 @@ public class OrderService {
         return repository.findByIdOptional(id)
                 .map(existing -> {
                     existing.updateStatus(parseStatus(newStatus)); // ✅ lógica en entity
-                    return OrderMapper.toResponse(existing);
+                    return GameMapper.toResponse(existing);
                 })
                 .orElseThrow(() -> new InvalidOperationException("Order does not exist with id " + id));
     }
