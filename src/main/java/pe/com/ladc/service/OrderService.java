@@ -15,7 +15,6 @@ import pe.com.ladc.repository.OrderRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class OrderService {
@@ -35,7 +34,7 @@ public class OrderService {
         return repository.listAll()
                 .stream()
                 .map(GameMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

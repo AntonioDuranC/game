@@ -16,7 +16,6 @@ import pe.com.ladc.repository.PaymentRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class PaymentService {
@@ -37,7 +36,15 @@ public class PaymentService {
     public PaymentResponseDTO create(PaymentRequestDTO request) {
         Order order = ordersRepository.findById(request.getOrderId());
         if (order == null) {
-            throw new InvalidOperationException("Order no found with id " + request.getOrderId());
+            throw new InvalidOperationException("Order not found with id " + request.getOrderId());
+        }
+
+        // Validar que no exista otro Payment asociado a este Order
+        boolean exists = paymentRepository.find("order.id", request.getOrderId())
+                .firstResultOptional()
+                .isPresent();
+        if (exists) {
+            throw new InvalidOperationException("This order already has an associated payment");
         }
 
         Payment payment = Payment.builder()
@@ -53,6 +60,7 @@ public class PaymentService {
         return GameMapper.toResponse(payment);
     }
 
+
     /**
      * Find all payments
      */
@@ -60,7 +68,7 @@ public class PaymentService {
         return paymentRepository.listAll()
                 .stream()
                 .map(GameMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

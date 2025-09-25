@@ -8,6 +8,7 @@ import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class GameRepository implements PanacheRepositoryBase<Game, Long> {
@@ -43,8 +44,8 @@ public class GameRepository implements PanacheRepositoryBase<Game, Long> {
         return count();
     }
 
-    public Game findById(long id) {
-        return find("id = ?1 and active = true", id).firstResult();
+    public Optional<Game> findByIdAndActive(long id) {
+        return find("id = ?1 and active = true", id).firstResultOptional();
     }
 }
 

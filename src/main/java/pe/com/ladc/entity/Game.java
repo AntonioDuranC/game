@@ -45,4 +45,5 @@ public class Game {
     @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonBackReference // 🔹 evita ciclos al serializar
     private Stock stock;
+
 }

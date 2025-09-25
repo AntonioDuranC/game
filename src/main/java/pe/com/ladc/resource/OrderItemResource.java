@@ -6,9 +6,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import pe.com.ladc.dto.OrderItemRequestDTO;
 import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.dto.ResponseDTO;
-import pe.com.ladc.entity.OrderItem;
 import pe.com.ladc.service.OrderItemService;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class OrderItemResource {
 
     @POST
     @Operation(summary = "Add item to order")
-    public Response addItem(@PathParam("orderId") Long orderId, OrderItem item) {
+    public Response addItem(@PathParam("orderId") Long orderId, OrderItemRequestDTO item) {
         OrderItemResponseDTO orderItem = service.addItem(orderId, item);
         return Response.ok(new ResponseDTO<>("Item created",200, orderItem)).build();
     }

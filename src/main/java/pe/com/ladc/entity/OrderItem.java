@@ -26,8 +26,10 @@ public class OrderItem {
     @JsonBackReference // 🔹 evita ciclos al serializar
     private Order order;
 
-    @Column(name = "game_id", nullable = false)
-    private Long gameId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id", nullable = false)
+    @JsonBackReference // 🔹 evita ciclos al serializar
+    private Game game;
 
     @Column(nullable = false)
     private Integer quantity;

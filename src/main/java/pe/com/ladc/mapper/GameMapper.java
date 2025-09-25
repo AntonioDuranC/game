@@ -63,7 +63,7 @@ public class GameMapper {
         return OrderItemResponseDTO.builder()
                 .id(item.getId())
                 .orderId(item.getOrder().getId())
-                .gameId(item.getGameId())
+                .gameId(item.getGame().getId())
                 .quantity(item.getQuantity())
                 .price(item.getPrice())
                 .build();

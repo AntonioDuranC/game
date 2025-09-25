@@ -30,7 +30,8 @@ CREATE TABLE public.order_items (
     order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     game_id BIGINT NOT NULL REFERENCES games(id) ON DELETE CASCADE,
     quantity INT NOT NULL,
-    price NUMERIC(10,2) NOT NULL
+    price NUMERIC(10,2) NOT NULL,
+    CONSTRAINT uq_order_game UNIQUE (order_id, game_id)
 );
 
 CREATE TABLE public.payments (

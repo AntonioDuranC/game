@@ -77,7 +77,7 @@ public class GameResource {
     @Path("/{id}")
     public Response get(@PathParam("id") int id){
         return Response.ok(
-                new ResponseDTO<>("Game retrieved", 200, service.findById(id))
+                new ResponseDTO<>("Game retrieved", 200, service.findByIdAndActive(id))
         ).build();
     }
 

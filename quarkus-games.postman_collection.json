@@ -92,7 +92,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Metal Slug XI\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
+							"raw": "{\r\n  \"title\": \"Metal Slug ALLIEN\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +124,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.99,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.55,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -156,7 +156,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigi playin car\",\r\n  \"category\": \"SPORTS\"\r\n}",
+							"raw": "{\r\n  \"id\": \"2\",\r\n  \"title\": \"Mario Bross y Luigi playing car\",\r\n  \"category\": \"SPORTS\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,7 +445,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 7.98\r\n}\r\n",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 44.25\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -580,7 +580,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"gameId\": 3,\r\n  \"quantity\": 10,\r\n  \"price\": 66.99\r\n}\r\n",
+							"raw": "{\r\n  \"gameId\": 2,\r\n  \"quantity\": 10,\r\n  \"price\": 66.99\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -641,15 +641,15 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/orders/1/items/9",
+							"raw": "{{baseURL}}/orders/3/items/3",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"orders",
-								"1",
+								"3",
 								"items",
-								"9"
+								"3"
 							]
 						}
 					},
@@ -755,13 +755,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/payments/2/status/PAID",
+							"raw": "{{baseURL}}/payments/1/status/PAID",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"payments",
-								"2",
+								"1",
 								"status",
 								"PAID"
 							]

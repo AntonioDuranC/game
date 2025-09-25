@@ -1,67 +1,53 @@
-# example
+# Proyecto Quarkus - Sistema de Gestión de Videojuegos 🎮
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este proyecto es un backend desarrollado con **[Quarkus](https://quarkus.io/)** que implementa un sistema de gestión de videojuegos, órdenes y usuarios.  
+Está diseñado para ejecutarse de manera local y servir como base para un entorno productivo en la nube.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+---
 
-## Running the application in dev mode
+## 🚀 Requisitos previos
 
-You can run your application in dev mode that enables live coding using:
+Antes de levantar el proyecto, asegúrate de tener instaladas las siguientes herramientas en tu PC:
 
-```shell script
-./mvnw compile quarkus:dev
-```
+- **Java 17** o superior  
+  Verifica la versión instalada:
+  ```bash
+  java -version
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+# 🐳 Instrucciones para levantar y bajar Docker Compose
 
-## Packaging and running the application
+  Este documento explica cómo iniciar y detener servicios definidos en un archivo `docker-compose.yml`.
 
-The application can be packaged using:
+---
 
-```shell script
-./mvnw package
-```
+## Ejecución del proyecto
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+### ▶️ Levantar los contenedores
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+  Para iniciar los servicios definidos en tu `docker-compose.yml`, ejecuta:
+  
+  ```bash
+  docker compose up -d
+  ```
 
-If you want to build an _über-jar_, execute the following command:
+---
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+### ▶️ Bajar y eliminar volúmenes asociados
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Para eliminar volumnes creados por los servicios definidos en tu `docker-compose.yml`, ejecuta:
 
-## Creating a native executable
+  ```bash
+  docker compose down -v
+  ```
 
-You can create a native executable using:
+### ▶️ Ejecutar en modo de desarrollo
 
-```shell script
-./mvnw package -Dnative
-```
+  ```bash
+  ./mvnw quarkus:dev
+  ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+---
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+## 📦 Aplicación estará disponible
 
-You can then execute your native executable with: `./target/example-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+`http://localhost:8080`

@@ -10,6 +10,7 @@ import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
 import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.GameRepository;
+import pe.com.ladc.util.GameMessages;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class GameService {
 
         if (exists) {
             throw new InvalidOperationException(
-                    "A game with title '" + game.getTitle() + "' and category '" + game.getCategory() + "' already exists."
+                    String.format(GameMessages.GAME_ALREADY_EXISTS, game.getTitle(), game.getCategory())
             );
         }
 
@@ -45,7 +46,9 @@ public class GameService {
     @Transactional
     public GameResponseDTO replaceGame(Game game) {
         Game existingGame = repository.findByIdOptional(game.getId())
-                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
+                .orElseThrow(() -> new InvalidOperationException(
+                        String.format(GameMessages.GAME_DOES_NOT_EXIST, game.getId())
+                ));
 
         existingGame.setTitle(game.getTitle());
         existingGame.setCategory(game.getCategory());
@@ -110,8 +113,8 @@ public class GameService {
                 : repository.count();
     }
 
-    public GameResponseDTO findById(long id) {
-        Game game = repository.findByIdOptional(id)
+    public GameResponseDTO findByIdAndActive(long id) {
+        Game game = repository.findByIdAndActive(id)
                 .orElseThrow(() -> new InvalidOperationException("Game not found with id " + id));
         return GameMapper.toResponse(game);
     }
@@ -120,7 +123,9 @@ public class GameService {
         try {
             return GameCategory.valueOf(category.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InvalidEnumException(category);
+            throw new InvalidEnumException(
+                    String.format(GameMessages.INVALID_CATEGORY, category)
+            );
         }
     }
 

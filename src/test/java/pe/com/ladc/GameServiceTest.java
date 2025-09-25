@@ -125,18 +125,18 @@ class GameServiceTest {
     }
 
     @Test
-    void findById_shouldReturnDTO_whenFound() {
+    void findById_AndActive_shouldReturnDTO_whenFound() {
         when(repository.findByIdOptional(1L)).thenReturn(Optional.of(sampleGame));
 
-        GameResponseDTO dto = service.findById(1L);
+        GameResponseDTO dto = service.findByIdAndActive(1L);
 
         assertNotNull(dto);
         assertEquals("Elden Ring", dto.getTitle());
     }
 
     @Test
-    void findById_shouldThrow_whenNotFound() {
+    void findById_AndActive_shouldThrow_whenNotFound() {
         when(repository.findByIdOptional(5L)).thenReturn(Optional.empty());
-        assertThrows(InvalidOperationException.class, () -> service.findById(5L));
+        assertThrows(InvalidOperationException.class, () -> service.findByIdAndActive(5L));
     }
 }

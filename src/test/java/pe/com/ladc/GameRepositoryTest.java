@@ -17,7 +17,7 @@ class GameRepositoryTest {
 
     @Test
     @TestTransaction
-    void testFindById() {
+    void testFindByIdAndActive() {
         // 1. Arrange: Create and persist a new Games entity
         Game game = new Game();
         game.setTitle("The Witcher 3: Wild Hunt");
