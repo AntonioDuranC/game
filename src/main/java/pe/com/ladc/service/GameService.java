@@ -1,5 +1,9 @@
 package pe.com.ladc.service;
 
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,6 +21,8 @@ import java.util.List;
 @ApplicationScoped
 public class GameService {
 
+    private static final String GAME_CACHE = "game-cache";
+
     private final GameRepository repository;
 
     @Inject
@@ -25,6 +31,7 @@ public class GameService {
     }
 
     @Transactional
+    @CacheInvalidateAll(cacheName = GAME_CACHE) // invalidar toda cache cuando se crea un nuevo juego
     public GameResponseDTO createGame(Game game) {
         boolean exists = repository.find("title = ?1 and category = ?2", game.getTitle(), game.getCategory())
                 .firstResultOptional()
@@ -42,9 +49,9 @@ public class GameService {
         return GameMapper.toResponse(game);
     }
 
-
     @Transactional
-    public GameResponseDTO replaceGame(Game game) {
+    @CacheInvalidate(cacheName = GAME_CACHE) // invalidar solo la key asociada al id
+    public GameResponseDTO replaceGame(@CacheKey Game game) {
         Game existingGame = repository.findByIdOptional(game.getId())
                 .orElseThrow(() -> new InvalidOperationException(
                         String.format(GameMessages.GAME_DOES_NOT_EXIST, game.getId())
@@ -63,7 +70,8 @@ public class GameService {
     }
 
     @Transactional
-    public void deleteGame(long id) {
+    @CacheInvalidate(cacheName = GAME_CACHE)
+    public void deleteGame(@CacheKey long id) {
         Game game = repository.findByIdOptional(id)
                 .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + id));
         game.setActive(false);
@@ -71,7 +79,8 @@ public class GameService {
     }
 
     @Transactional
-    public GameResponseDTO updateGame(Game game) {
+    @CacheInvalidate(cacheName = GAME_CACHE)
+    public GameResponseDTO updateGame(@CacheKey Game game) {
         Game existingGame = repository.findByIdOptional(game.getId())
                 .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
 
@@ -113,7 +122,9 @@ public class GameService {
                 : repository.count();
     }
 
-    public GameResponseDTO findByIdAndActive(long id) {
+    @CacheResult(cacheName = GAME_CACHE)
+    public GameResponseDTO findByIdAndActive(@CacheKey long id) {
+        System.out.println(">>> Ejecutando consulta en DB para id=" + id);
         Game game = repository.findByIdAndActive(id)
                 .orElseThrow(() -> new InvalidOperationException("Game not found with id " + id));
         return GameMapper.toResponse(game);
@@ -128,5 +139,4 @@ public class GameService {
             );
         }
     }
-
 }

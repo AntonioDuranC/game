@@ -13,7 +13,6 @@ CREATE TABLE public.game_stock (
     game_id INT NOT NULL REFERENCES public.games(id) ON DELETE CASCADE,
     total_stock INT NOT NULL DEFAULT 0,
     reserved_stock INT NOT NULL DEFAULT 0,
-    available_stock INT GENERATED ALWAYS AS (total_stock - reserved_stock) STORED,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

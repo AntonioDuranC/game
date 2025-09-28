@@ -30,7 +30,7 @@ public class JwtKeyGenerator {
 
         // 3. Calcular expiración (12 horas desde ahora)
         Instant now = Instant.now();
-        Instant exp = now.plusSeconds(7 * 12 * 60 * 60); // 84 horas
+        Instant exp = now.plusSeconds(4 * 7 * 12 * 60 * 60); // 4 semanas
 
         // 4. Generar un JWT con SmallRye
         String token = Jwt.issuer("http://localhost:8080")
