@@ -1,9 +1,6 @@
 package pe.com.ladc.mapper;
 
-import pe.com.ladc.dto.GameResponseDTO;
-import pe.com.ladc.dto.OrderItemResponseDTO;
-import pe.com.ladc.dto.OrderResponseDTO;
-import pe.com.ladc.dto.PaymentResponseDTO;
+import pe.com.ladc.dto.*;
 import pe.com.ladc.entity.Game;
 import pe.com.ladc.entity.Order;
 import pe.com.ladc.entity.OrderItem;
@@ -13,6 +10,21 @@ public class GameMapper {
 
     private GameMapper() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static Game toEntity(GameRequestDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        return Game.builder()
+                .title(dto.getTitle())
+                .category(dto.getCategory()) // ya es GameCategory
+                .description(dto.getDescription())
+                .price(dto.getPrice())
+                .releaseDate(dto.getReleaseDate())
+                .active(true) // por defecto los juegos creados están activos
+                .build();
     }
 
     public static GameResponseDTO toResponse(Game game) {

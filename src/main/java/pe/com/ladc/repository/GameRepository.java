@@ -6,6 +6,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
+import pe.com.ladc.enums.GameCategory;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,15 @@ public class GameRepository implements PanacheRepositoryBase<Game, Long> {
 
     public Optional<Game> findByIdAndActive(long id) {
         return find("id = ?1 and active = true", id).firstResultOptional();
+    }
+
+    public Optional<Game> findByIdWithStock(Long gameId) {
+        return find("FROM Game g LEFT JOIN FETCH g.stock WHERE g.id = ?1", gameId).firstResultOptional();
+    }
+
+    public boolean existsByTitleAndCategory(String title, GameCategory category) {
+        long count = count("title = ?1 and category = ?2", title, category);
+        return count > 0;
     }
 }
 

@@ -41,7 +41,6 @@ public class OrderItemService {
      */
     @Transactional
     public OrderItemResponseDTO addItem(Long orderId, OrderItemRequestDTO dto) {
-        // Validaciones tempranas (fail-fast)
         Objects.requireNonNull(dto.getGameId(), "GameId is required");
         Objects.requireNonNull(orderId, "OrderId is required");
 
@@ -52,20 +51,17 @@ public class OrderItemService {
             throw new IllegalArgumentException("Price must be greater than 0");
         }
 
-        // Recuperar entidades asociadas
         Game game = gameRepository.findByIdAndActive(dto.getGameId())
                 .orElseThrow(() -> new IllegalArgumentException("Game does not exist"));
 
         Order order = orderRepository.findByIdOptional(orderId)
                 .orElseThrow(() -> new InvalidOperationException("Order not found " + orderId));
 
-        // Verificar duplicados
         orderItemRepository.findByOrderIdAndGameId(orderId, dto.getGameId())
                 .ifPresent(item -> {
                     throw new InvalidOperationException("This game is already in the order");
                 });
 
-        // Construir item en una sola pasada
         OrderItem item = OrderItem.builder()
                 .game(game)
                 .order(order)
@@ -73,13 +69,16 @@ public class OrderItemService {
                 .price(dto.getPrice())
                 .build();
 
+        // Validaciones de negocio desde la entidad
+        item.validatePrice();
+        item.updateQuantity(dto.getQuantity());
+
         log.info("item: {}", item);
 
         orderItemRepository.persist(item);
 
         return GameMapper.toResponse(item);
     }
-
 
     /**
      * List all items of an order
@@ -100,28 +99,62 @@ public class OrderItemService {
     }
 
     /**
-     * Partial update quantity when status is PENDING
+     * Update quantity when status is PENDING
      */
     @Transactional
     public OrderItemResponseDTO updateQuantity(Long orderId, Long itemId, Integer quantity) {
-        if (quantity <= 0) {
+        if (quantity == null || quantity <= 0) {
             throw new InvalidOperationException("Quantity invalid");
         }
 
+        // Validar existencia de la orden
         Order order = orderRepository.findByIdOptional(orderId)
                 .orElseThrow(() -> new InvalidOperationException("Order " + orderId + " not found"));
 
+        // Validar estado de la orden (ej. que siga en PENDING)
         order.validStatusItem();
 
-        OrderItem updated = orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
-                .firstResultOptional()
-                .map(existing -> {
-                    existing.setQuantity(quantity);
-                    return existing;
-                }).orElseThrow(
-                        () -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
+        // Recuperar el item
+        OrderItem item = orderItemRepository.findByOrderIdAndItemId(orderId, itemId)
+                .orElseThrow(() -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
 
-        return GameMapper.toResponse(updated);
+        // Recuperar el juego con su stock
+        Game game = gameRepository.findByIdWithStock(item.getGame().getId())
+                .orElseThrow(() -> new InvalidOperationException("Game not found: " + item.getGame().getId()));
+
+        if (game.getStock() == null) {
+            throw new InvalidOperationException("Stock not found for game: " + game.getId());
+        }
+
+        // Validar stock disponible
+        int available = game.getStock().getAvailableStock();
+        if (quantity > available) {
+            throw new InvalidOperationException(
+                    "Requested quantity " + quantity + " exceeds available stock " + available
+            );
+        }
+
+        // Actualizar cantidad (delegado en la entidad si quieres mantener lógica encapsulada)
+        item.updateQuantity(quantity);
+
+        return GameMapper.toResponse(item);
+    }
+
+
+    /**
+     * Change game of an item (solo permitido si la orden lo permite)
+     */
+    @Transactional
+    public OrderItemResponseDTO changeGame(Long orderId, Long itemId, Long newGameId) {
+        Game newGame = gameRepository.findByIdAndActive(newGameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game does not exist"));
+
+        OrderItem item = orderItemRepository.findByOrderIdAndItemId(orderId, itemId)
+                .orElseThrow(() -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
+
+        item.changeGame(newGame);
+
+        return GameMapper.toResponse(item);
     }
 
     /**
@@ -129,16 +162,13 @@ public class OrderItemService {
      */
     @Transactional
     public void deleteItem(Long orderId, Long itemId) {
-        Order order = orderRepository.findByIdOptional(orderId)
-                .orElseThrow(() -> new InvalidOperationException("Order " + orderId + " not found"));
+        OrderItem item = orderItemRepository.findByOrderIdAndItemId(orderId, itemId)
+                .orElseThrow(() -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
 
-        if (order.validDeleteItem()) {
-            orderItemRepository.find("order.id = ?1 and id = ?2", orderId, itemId)
-                    .firstResultOptional()
-                    .ifPresentOrElse(orderItemRepository::delete,
-                            () -> { throw new InvalidOperationException(
-                                    "Item " + itemId + " not found for order " + orderId); }
-                    );
+        if (item.canBeDeleted()) {
+            orderItemRepository.delete(item);
+        } else {
+            throw new InvalidOperationException("Item " + itemId + " cannot be deleted in current order status");
         }
     }
 }

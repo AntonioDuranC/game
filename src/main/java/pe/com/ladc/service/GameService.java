@@ -7,9 +7,11 @@ import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import pe.com.ladc.dto.GameRequestDTO;
 import pe.com.ladc.dto.GameResponseDTO;
-import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.entity.Game;
+import pe.com.ladc.enums.GameCategory;
+
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
 import pe.com.ladc.mapper.GameMapper;
@@ -32,18 +34,13 @@ public class GameService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = GAME_CACHE) // invalidar toda cache cuando se crea un nuevo juego
-    public GameResponseDTO createGame(Game game) {
-        boolean exists = repository.find("title = ?1 and category = ?2", game.getTitle(), game.getCategory())
-                .firstResultOptional()
-                .isPresent();
-
-        if (exists) {
-            throw new InvalidOperationException(
-                    String.format(GameMessages.GAME_ALREADY_EXISTS, game.getTitle(), game.getCategory())
-            );
+    public GameResponseDTO createGame(GameRequestDTO request) {
+        if (repository.existsByTitleAndCategory(request.getTitle(), request.getCategory())) {
+            throw new InvalidOperationException("A game with the same title and category already exists");
         }
 
-        game.setActive(true);
+        Game game = GameMapper.toEntity(request);
+        game.activate();
         repository.persist(game);
 
         return GameMapper.toResponse(game);
@@ -51,20 +48,41 @@ public class GameService {
 
     @Transactional
     @CacheInvalidate(cacheName = GAME_CACHE) // invalidar solo la key asociada al id
-    public GameResponseDTO replaceGame(@CacheKey Game game) {
-        Game existingGame = repository.findByIdOptional(game.getId())
-                .orElseThrow(() -> new InvalidOperationException(
-                        String.format(GameMessages.GAME_DOES_NOT_EXIST, game.getId())
-                ));
+    public GameResponseDTO replaceGame(Long id, GameRequestDTO request) {
+        Game game = repository.findByIdOptional(id)
+                .orElseThrow(() -> new InvalidOperationException("Game with id " + id + " not found"));
 
-        existingGame.setTitle(game.getTitle());
-        existingGame.setCategory(game.getCategory());
-        existingGame.setDescription(game.getDescription());
-        existingGame.setPrice(game.getPrice());
-        existingGame.setStock(game.getStock());
-        existingGame.setReleaseDate(game.getReleaseDate());
+        game.updateDescription(request.getDescription());
+        game.changePrice(request.getPrice());
+        game.setCategory(request.getCategory());
+        game.setReleaseDate(request.getReleaseDate());
 
-        repository.persist(existingGame);
+        repository.persist(game);
+
+        return GameMapper.toResponse(game);
+    }
+
+    @Transactional
+    @CacheInvalidate(cacheName = GAME_CACHE)
+    public GameResponseDTO updateGame(Long id, GameRequestDTO request) {
+        Game existingGame = repository.findByIdOptional(id)
+                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + id));
+
+        if (request.getTitle() != null) {
+            existingGame.setTitle(request.getTitle());
+        }
+        if (request.getCategory() != null) {
+            existingGame.setCategory(parseCategory(request.getCategory().name()));
+        }
+        if (request.getDescription() != null) {
+            existingGame.setDescription(request.getDescription());
+        }
+        if (request.getPrice() != null) {
+            existingGame.setPrice(request.getPrice());
+        }
+        if (request.getReleaseDate() != null) {
+            existingGame.setReleaseDate(request.getReleaseDate());
+        }
 
         return GameMapper.toResponse(existingGame);
     }
@@ -73,37 +91,10 @@ public class GameService {
     @CacheInvalidate(cacheName = GAME_CACHE)
     public void deleteGame(@CacheKey long id) {
         Game game = repository.findByIdOptional(id)
-                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + id));
-        game.setActive(false);
+                .orElseThrow(() -> new InvalidOperationException("Game with id " + id + " not found"));
+
+        game.deactivate();
         repository.persist(game);
-    }
-
-    @Transactional
-    @CacheInvalidate(cacheName = GAME_CACHE)
-    public GameResponseDTO updateGame(@CacheKey Game game) {
-        Game existingGame = repository.findByIdOptional(game.getId())
-                .orElseThrow(() -> new InvalidOperationException("Game does not exist with id " + game.getId()));
-
-        if (game.getTitle() != null) {
-            existingGame.setTitle(game.getTitle());
-        }
-        if (game.getCategory() != null) {
-            existingGame.setCategory(parseCategory(game.getCategory().name()));
-        }
-        if (game.getDescription() != null) {
-            existingGame.setDescription(game.getDescription());
-        }
-        if (game.getPrice() != null) {
-            existingGame.setPrice(game.getPrice());
-        }
-        if (game.getStock() != null) {
-            existingGame.setStock(game.getStock());
-        }
-        if (game.getReleaseDate() != null) {
-            existingGame.setReleaseDate(game.getReleaseDate());
-        }
-
-        return GameMapper.toResponse(existingGame);
     }
 
     public List<GameResponseDTO> findPaginated(int page, int pageSize, String title) {

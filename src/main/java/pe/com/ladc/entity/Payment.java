@@ -23,7 +23,7 @@ public class Payment {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, unique = true)
-    @JsonBackReference // 🔹 evita ciclos al serializar
+    @JsonBackReference // evita ciclos al serializar
     private Order order;
 
     @Column(nullable = false)
