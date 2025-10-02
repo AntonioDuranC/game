@@ -83,7 +83,7 @@ public class GameService {
         if (request.getReleaseDate() != null) {
             existingGame.setReleaseDate(request.getReleaseDate());
         }
-
+        repository.persist(existingGame);
         return GameMapper.toResponse(existingGame);
     }
 
