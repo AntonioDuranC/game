@@ -1,0 +1,8 @@
+{
+  "title": "Broken Game",
+  "category": "RPG",
+  "description": "Should fail because price is zero",
+  "price": 0,
+  "releaseDate": "2025-01-01",
+  "stockQuantity": 50
+}

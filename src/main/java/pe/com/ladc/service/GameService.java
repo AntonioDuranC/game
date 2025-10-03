@@ -19,6 +19,7 @@ import pe.com.ladc.repository.GameRepository;
 import pe.com.ladc.util.GameMessages;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @ApplicationScoped
 public class GameService {
@@ -26,6 +27,17 @@ public class GameService {
     private static final String GAME_CACHE = "game-cache";
 
     private final GameRepository repository;
+
+    private static final List<Predicate<GameRequestDTO>> INVALIDATION_RULES = List.of(
+            // Regla 1: Título nulo o vacío
+            request -> request.getTitle() == null || request.getTitle().isBlank(),
+
+            // Regla 2: Precio nulo o no positivo
+            request -> request.getPrice() == null || request.getPrice().doubleValue() <= 0,
+
+            // Regla 3: Cantidad en stock negativa
+            request -> request.getStockQuantity() < 0
+    );
 
     @Inject
     public GameService(GameRepository repository) {
@@ -35,6 +47,10 @@ public class GameService {
     @Transactional
     @CacheInvalidateAll(cacheName = GAME_CACHE) // invalidar toda cache cuando se crea un nuevo juego
     public GameResponseDTO createGame(GameRequestDTO request) {
+        if (invalidRequest(request)) {
+            throw new InvalidOperationException("Request invalid");
+        }
+
         if (repository.existsByTitleAndCategory(request.getTitle(), request.getCategory())) {
             throw new InvalidOperationException("A game with the same title and category already exists");
         }
@@ -44,6 +60,11 @@ public class GameService {
         repository.persist(game);
 
         return GameMapper.toResponse(game);
+    }
+
+    private static boolean invalidRequest(GameRequestDTO request) {
+        // anyMatch: verifica si *al menos una* de las reglas es verdadera para la petición
+        return INVALIDATION_RULES.stream().anyMatch(rule -> rule.test(request));
     }
 
     @Transactional
