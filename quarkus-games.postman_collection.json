@@ -1,857 +1,885 @@
 {
-	"info": {
-		"_postman_id": "24a1e7ed-efda-4d90-8d7a-da7278bc7cfb",
-		"name": "quarkus-games",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30817906"
-	},
-	"item": [
-		{
-			"name": "security",
-			"item": [
-				{
-					"name": "create user",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"antonio@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"antonio@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/login",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"login"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "games",
-			"item": [
-				{
-					"name": "create game",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Metal Slug ALLIEN XII\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "replace game",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.55,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games/3",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update game",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Mario Bross y Luigi playing car\",\r\n  \"category\": \"SPORTS\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/games/3",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete game",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games/3",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all games",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games?title=&page=0&size=7",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games"
-							],
-							"query": [
-								{
-									"key": "title",
-									"value": ""
-								},
-								{
-									"key": "page",
-									"value": "0"
-								},
-								{
-									"key": "size",
-									"value": "7"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id game",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/games/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"games",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "stock",
-			"item": [
-				{
-					"name": "add stock",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/stock/1/add?quantity=10",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"stock",
-								"1",
-								"add"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "reserve stock",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/stock/1/reserve?quantity=5",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"stock",
-								"1",
-								"reserve"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "release stock",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/stock/1/release?quantity=5",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"stock",
-								"1",
-								"release"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "confirm stock",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/stock/1/confirm?quantity=5",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"stock",
-								"1",
-								"confirm"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "orders",
-			"item": [
-				{
-					"name": "create order",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 44.25\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/orders",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "change status",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/status/ACCEPTED",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"status",
-								"ACCEPTED"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "cancel order",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/cancel",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"cancel"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all order",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id order",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "order items",
-			"item": [
-				{
-					"name": "add order item",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"gameId\": 1,\r\n  \"quantity\": 10,\r\n  \"price\": 66.99\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/orders/1/items",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"items"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update quantity",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/items/1/quantity/55",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"items",
-								"1",
-								"quantity",
-								"55"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete item order",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/items/2",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"items",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all order items",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/items",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"items"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id order item",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/orders/1/items/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"orders",
-								"1",
-								"items",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "payments",
-			"item": [
-				{
-					"name": "create payment",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"orderId\": 2,\r\n    \"amount\": 59.99,\r\n    \"method\": \"CREDIT_CARD\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/payments",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"payments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update payment status",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/payments/1/status/PAID",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"payments",
-								"1",
-								"status",
-								"PAID"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all payment",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/payments",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"payments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get Id payment",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/payments/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"payments",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseURL",
-			"value": ""
-		},
-		{
-			"key": "token",
-			"value": "",
-			"type": "default"
-		}
-	]
+  "info": {
+    "_postman_id": "24a1e7ed-efda-4d90-8d7a-da7278bc7cfb",
+    "name": "quarkus-games",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30817906"
+  },
+  "item": [
+    {
+      "name": "security",
+      "item": [
+        {
+          "name": "create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"antonio@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"antonio@gmail.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "games",
+      "item": [
+        {
+          "name": "create game",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Metal Slug X\",\r\n  \"category\": \"ADVENTURE\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"stockQuantity\": 100,\r\n  \"price\": 59.99,\r\n  \"releaseDate\": \"1998-09-03\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/games",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "replace game",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Street Fighter Alpha\",\r\n  \"category\": \"ACTION\",\r\n  \"description\": \"Stealth action game developed by Konami.\",\r\n  \"price\": 88.55,\r\n  \"releaseDate\": \"1997-09-03\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/games/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update game",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Mario Bross y Luigi Car's\",\r\n  \"category\": \"SPORTS\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/games/3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete game",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/games/3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all games",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/games?title=&page=0&size=7",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games"
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Id game",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/games/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "games",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "stock",
+      "item": [
+        {
+          "name": "add stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/stock/1/add?quantity=50",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "stock",
+                "1",
+                "add"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reserve stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/stock/1/reserve?quantity=15",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "stock",
+                "1",
+                "reserve"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "release stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/stock/1/release?quantity=10",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "stock",
+                "1",
+                "release"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "confirm stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/stock/1/confirm?quantity=5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "stock",
+                "1",
+                "confirm"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "item": [
+        {
+          "name": "create order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userId\": 1,\r\n  \"total\": 99.25\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/orders",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "change status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/1/status/ACCEPTED",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "1",
+                "status",
+                "ACCEPTED"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cancel order",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/3/cancel",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "3",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Id order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "order items",
+      "item": [
+        {
+          "name": "add order item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"gameId\": 1,\r\n  \"quantity\": 30,\r\n  \"price\": 88.99\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/orders/2/items",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "2",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update game",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/2/items/2/game/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "2",
+                "items",
+                "2",
+                "game",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/2/items/2/quantity/5",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "2",
+                "items",
+                "2",
+                "quantity",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete item order",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/2/items/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "2",
+                "items",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all order items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/1/items",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "1",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Id order item",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/orders/2/items/2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "orders",
+                "2",
+                "items",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "item": [
+        {
+          "name": "create payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orderId\": 2,\r\n    \"amount\": 59.99,\r\n    \"method\": \"CREDIT_CARD\",\r\n    \"currency\": \"USD\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/payments",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update payment status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/payments/1/status/PAID",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "payments",
+                "1",
+                "status",
+                "PAID"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all payment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/payments",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Id payment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/payments/1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "payments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "default"
+    }
+  ]
 }

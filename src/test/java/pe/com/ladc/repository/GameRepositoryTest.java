@@ -6,13 +6,11 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import pe.com.ladc.entity.Game;
-import pe.com.ladc.entity.Stock;
 import pe.com.ladc.enums.GameCategory;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,31 +26,22 @@ class GameRepositoryTest {
         repository.deleteAll();
     }
 
-    private Game buildEntity(String title, int total, int reserved) {
-        Stock stock = Stock.builder()
-                .totalStock(total)
-                .reservedStock(reserved)
-                .updatedAt(LocalDateTime.now())
-                .build();
+    private Game buildEntity(String title) {
 
-        Game game = Game.builder()
+        return Game.builder()
                 .title(title)
                 .category(GameCategory.SPORTS)
                 .description("Simulation")
                 .price(BigDecimal.valueOf(59.99))
                 .releaseDate(LocalDate.of(2025, 9, 30))
                 .active(true)
-                .stock(stock)
                 .build();
-
-        stock.setGame(game);
-        return game;
     }
 
     @Test
     @TestTransaction // ✅ rollback automático
     void testPersistAndFindById() {
-        Game game = buildEntity("FIFA 25", 100, 20);
+        Game game = buildEntity("FIFA 25");
         repository.persist(game);
 
         assertNotNull(game.getId()); // ID generado
@@ -60,13 +49,12 @@ class GameRepositoryTest {
         Game found = repository.findById(game.getId());
         assertNotNull(found);
         assertEquals("FIFA 25", found.getTitle());
-        assertEquals(80, found.getStock().getAvailableStock()); // total - reserved
     }
 
     @Test
     @TestTransaction
     void testDeleteGame() {
-        Game game = buildEntity("NBA 2K25", 50, 10);
+        Game game = buildEntity("NBA 2K25");
         repository.persist(game);
 
         Long id = game.getId();
@@ -81,7 +69,7 @@ class GameRepositoryTest {
     @Test
     @TestTransaction
     void testUpdateGame() {
-        Game game = buildEntity("Gran Turismo 7", 200, 0);
+        Game game = buildEntity("Gran Turismo 7");
         repository.persist(game);
 
         Long id = game.getId();

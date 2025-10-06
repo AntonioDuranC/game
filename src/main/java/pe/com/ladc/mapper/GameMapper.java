@@ -38,9 +38,6 @@ public class GameMapper {
                 .price(game.getPrice())
                 .releaseDate(game.getReleaseDate())
                 .active(game.getActive())
-                .availableStock(
-                        game.getStock() != null ? game.getStock().getAvailableStock() : 0
-                )
                 .build();
     }
 
@@ -63,6 +60,10 @@ public class GameMapper {
                 .id(payment.getId())
                 .orderId(payment.getOrder().getId())
                 .amount(payment.getAmount())
+                .currency(payment.getCurrency())
+                .convertedAmount(payment.getConvertedAmount())
+                .exchangeRate(payment.getExchangeRate())
+                .exchangeDate(payment.getExchangeDate())
                 .paymentDate(payment.getPaymentDate())
                 .method(payment.getMethod())
                 .status(payment.getStatus())

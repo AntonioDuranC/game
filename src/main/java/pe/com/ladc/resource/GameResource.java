@@ -35,6 +35,8 @@ public class GameResource {
 
     @PUT
     @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Replace an existing game (full update)")
     public Response replaceGame(@PathParam("id") Long id, GameRequestDTO request) {
         GameResponseDTO updated = service.replaceGame(id, request);

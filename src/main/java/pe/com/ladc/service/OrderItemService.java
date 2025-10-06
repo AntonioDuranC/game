@@ -9,11 +9,13 @@ import pe.com.ladc.dto.OrderItemResponseDTO;
 import pe.com.ladc.entity.Game;
 import pe.com.ladc.entity.OrderItem;
 import pe.com.ladc.entity.Order;
+import pe.com.ladc.entity.Stock;
 import pe.com.ladc.exception.InvalidOperationException;
 import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.GameRepository;
 import pe.com.ladc.repository.OrderItemRepository;
 import pe.com.ladc.repository.OrderRepository;
+import pe.com.ladc.repository.StockRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,13 +27,16 @@ import java.util.Optional;
 public class OrderItemService {
 
     private final GameRepository gameRepository;
+    private final StockRepository stockRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
 
     @Inject
-    public OrderItemService(GameRepository gameRepository, OrderItemRepository orderItemsRepository,
+    public OrderItemService(GameRepository gameRepository, StockRepository stockRepository,
+                            OrderItemRepository orderItemsRepository,
                             OrderRepository ordersRepository) {
         this.gameRepository = gameRepository;
+        this.stockRepository = stockRepository;
         this.orderItemRepository = orderItemsRepository;
         this.orderRepository = ordersRepository;
     }
@@ -119,15 +124,15 @@ public class OrderItemService {
                 .orElseThrow(() -> new InvalidOperationException("Item " + itemId + " not found for order " + orderId));
 
         // Recuperar el juego con su stock
-        Game game = gameRepository.findByIdWithStock(item.getGame().getId())
+        Stock stock = stockRepository.findByGameId(item.getGame().getId())
                 .orElseThrow(() -> new InvalidOperationException("Game not found: " + item.getGame().getId()));
 
-        if (game.getStock() == null) {
-            throw new InvalidOperationException("Stock not found for game: " + game.getId());
+        if (stock.getAvailableStock() == null) {
+            throw new InvalidOperationException("Stock not available for game: " + item.getGame());
         }
 
         // Validar stock disponible
-        int available = game.getStock().getAvailableStock();
+        int available = stock.getAvailableStock();
         if (quantity > available) {
             throw new InvalidOperationException(
                     "Requested quantity " + quantity + " exceeds available stock " + available

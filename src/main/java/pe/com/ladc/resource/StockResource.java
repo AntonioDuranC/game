@@ -1,6 +1,5 @@
 package pe.com.ladc.resource;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -28,7 +27,6 @@ public class StockResource {
 
     @PATCH
     @Path("/{gameId}/add")
-    @RolesAllowed("admin")
     @Operation(summary = "Add stock", description = "Increase total stock for a game")
     @APIResponse(
             responseCode = "200",
@@ -42,7 +40,6 @@ public class StockResource {
 
     @PATCH
     @Path("/{gameId}/reserve")
-    @RolesAllowed("admin")
     @Operation(summary = "Reserve stock", description = "Reserve stock for a pending order")
     @APIResponse(
             responseCode = "200",
@@ -56,7 +53,6 @@ public class StockResource {
 
     @PATCH
     @Path("/{gameId}/release")
-    @RolesAllowed("admin")
     @Operation(summary = "Release stock", description = "Release reserved stock when order is cancelled")
     @APIResponse(
             responseCode = "200",
@@ -70,7 +66,6 @@ public class StockResource {
 
     @PATCH
     @Path("/{gameId}/confirm")
-    @RolesAllowed("admin")
     @Operation(summary = "Confirm stock", description = "Confirm reserved stock when order is completed")
     @APIResponse(
             responseCode = "200",

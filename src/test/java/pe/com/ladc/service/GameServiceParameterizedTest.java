@@ -65,11 +65,6 @@ class GameServiceParameterizedTest {
             doAnswer(invocation -> {
                 Game game = invocation.getArgument(0);
                 game.setId(1L);
-                game.setStock(Stock.builder()
-                        .totalStock(request.getStockQuantity())
-                        .reservedStock(0)
-                        .game(game)
-                        .build());
                 return null;
             }).when(repository).persist(any(Game.class));
 

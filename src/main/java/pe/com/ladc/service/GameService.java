@@ -73,12 +73,14 @@ public class GameService {
         Game game = repository.findByIdOptional(id)
                 .orElseThrow(() -> new InvalidOperationException("Game with id " + id + " not found"));
 
-        game.updateDescription(request.getDescription());
-        game.changePrice(request.getPrice());
+        game.setTitle(request.getTitle());
         game.setCategory(request.getCategory());
         game.setReleaseDate(request.getReleaseDate());
 
-        repository.persist(game);
+        game.updateDescription(request.getDescription());
+        game.changePrice(request.getPrice());
+
+        //repository.persist(game);     -- No es necesario el persist
 
         return GameMapper.toResponse(game);
     }

@@ -3,6 +3,7 @@ package pe.com.ladc.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import pe.com.ladc.enums.CurrencyType;
 import pe.com.ladc.enums.PaymentMethod;
 import pe.com.ladc.enums.PaymentStatus;
 
@@ -28,6 +29,19 @@ public class Payment {
 
     @Column(nullable = false)
     private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency", length = 10, nullable = false)
+    private CurrencyType currency;  // 💰 Nuevo campo
+
+    @Column(name = "converted_amount", precision = 18, scale = 2)
+    private BigDecimal convertedAmount; // 💵 Monto convertido a soles (si aplica)
+
+    @Column(name = "exchange_rate", precision = 10, scale = 4)
+    private BigDecimal exchangeRate; // 💱 Tipo de cambio (si aplica)
+
+    @Column(name = "exchange_date")
+    private LocalDateTime exchangeDate; // 📅 Fecha del tipo de cambio
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;

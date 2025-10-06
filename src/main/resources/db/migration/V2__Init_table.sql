@@ -36,8 +36,20 @@ CREATE TABLE public.order_items (
 CREATE TABLE public.payments (
     id BIGSERIAL PRIMARY KEY,
     order_id BIGINT NOT NULL UNIQUE REFERENCES orders(id) ON DELETE CASCADE,
-    amount NUMERIC(10,2) NOT NULL,
+    -- Monto original enviado en la moneda especificada
+    amount NUMERIC(18,2) NOT NULL,
+    -- Moneda del pago: 'PEN' (soles) o 'USD' (dólares)
+    currency VARCHAR(10) NOT NULL,
+    -- Monto convertido a soles (si la moneda es USD)
+    converted_amount NUMERIC(18,2),
+    -- Tipo de cambio usado (campo 'venta' del API)
+    exchange_rate NUMERIC(10,4),
+    -- Fecha del tipo de cambio usado
+    exchange_date TIMESTAMP,
+    -- Fecha del pago
     payment_date TIMESTAMP DEFAULT NOW(),
+    -- Metodo de pago (tarjeta, efectivo, etc.)
     method VARCHAR(50) NOT NULL,
+    -- Estado del pago (PENDING, PAID, CANCELLED, REFUNDED)
     status VARCHAR(20) NOT NULL
 );

@@ -1,5 +1,6 @@
 package pe.com.ladc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -22,6 +23,7 @@ public class Stock {
 
     @OneToOne
     @JoinColumn(name = "game_id", nullable = false, unique = true)
+    @JsonIgnore  // 👈 evita la serialización circular
     private Game game;
 
     @Column(name = "total_stock", nullable = false)

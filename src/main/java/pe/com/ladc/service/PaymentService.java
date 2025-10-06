@@ -3,17 +3,23 @@ package pe.com.ladc.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import pe.com.ladc.client.ExchangeApi;
 import pe.com.ladc.dto.PaymentRequestDTO;
 import pe.com.ladc.dto.PaymentResponseDTO;
+import pe.com.ladc.dto.TypeExchangeResponse;
 import pe.com.ladc.entity.Order;
 import pe.com.ladc.entity.Payment;
+import pe.com.ladc.enums.CurrencyType;
 import pe.com.ladc.enums.PaymentStatus;
 import pe.com.ladc.exception.InvalidEnumException;
 import pe.com.ladc.exception.InvalidOperationException;
 import pe.com.ladc.mapper.GameMapper;
 import pe.com.ladc.repository.OrderRepository;
 import pe.com.ladc.repository.PaymentRepository;
+import pe.com.ladc.strategy.currency.CurrencyStrategyContext;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,11 +28,18 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository ordersRepository;
+    private final CurrencyStrategyContext currencyContext;
+    private final ExchangeApi exchangeApi;
 
     @Inject
-    public PaymentService(PaymentRepository paymentsRepository, OrderRepository ordersRepository) {
+    public PaymentService(PaymentRepository paymentsRepository,
+                          OrderRepository ordersRepository,
+                          CurrencyStrategyContext currencyContext,
+                          @RestClient ExchangeApi exchangeApi) {
         this.paymentRepository = paymentsRepository;
         this.ordersRepository = ordersRepository;
+        this.currencyContext = currencyContext;
+        this.exchangeApi = exchangeApi;
     }
 
     /**
@@ -47,9 +60,24 @@ public class PaymentService {
             throw new InvalidOperationException("This order already has an associated payment");
         }
 
+        // 🧠 Seleccionar estrategia según la moneda
+        var strategy = currencyContext.resolve(request.getCurrency());
+
+        TypeExchangeResponse exchangeRate = null;
+        BigDecimal convertedAmount = request.getAmount();
+
+        if (request.getCurrency() == CurrencyType.USD) {
+            exchangeRate = exchangeApi.getExchangeRate();
+            convertedAmount = strategy.convertAmount(request.getAmount(), exchangeRate);
+        }
+
         Payment payment = Payment.builder()
                 .order(order)
                 .amount(request.getAmount())
+                .currency(request.getCurrency())
+                .convertedAmount(convertedAmount)
+                .exchangeRate(exchangeRate != null ? BigDecimal.valueOf(exchangeRate.getVenta()) : null)
+                .exchangeDate(exchangeRate != null ? LocalDateTime.now() : null)
                 .method(request.getMethod())
                 .status(PaymentStatus.PENDING)
                 .paymentDate(LocalDateTime.now())

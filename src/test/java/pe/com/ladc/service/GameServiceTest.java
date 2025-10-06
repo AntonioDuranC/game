@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pe.com.ladc.dto.GameRequestDTO;
 import pe.com.ladc.dto.GameResponseDTO;
 import pe.com.ladc.entity.Game;
-import pe.com.ladc.entity.Stock;
 import pe.com.ladc.enums.GameCategory;
 import pe.com.ladc.exception.InvalidOperationException;
 import pe.com.ladc.repository.GameRepository;
@@ -31,13 +30,9 @@ class GameServiceTest {
     GameService service;
 
     // ---------- Helpers ----------
-    private Game buildEntity(Long id, int totalStock, int reservedStock) {
-        Stock stock = Stock.builder()
-                .totalStock(totalStock)
-                .reservedStock(reservedStock)
-                .build();
+    private Game buildEntity(Long id) {
 
-        Game game = Game.builder()
+        return Game.builder()
                 .id(id)
                 .title("FIFA 25")
                 .category(GameCategory.SPORTS)
@@ -45,11 +40,7 @@ class GameServiceTest {
                 .price(BigDecimal.valueOf(49.99))
                 .releaseDate(LocalDate.of(2025, 1, 1))
                 .active(true)
-                .stock(stock)
                 .build();
-
-        stock.setGame(game);
-        return game;
     }
 
     private GameRequestDTO buildRequest() {
@@ -65,7 +56,7 @@ class GameServiceTest {
 
     @Test
     void testFindById_success() {
-        Game entity = buildEntity(1L, 100, 50);
+        Game entity = buildEntity(1L);
         when(repository.findByIdAndActive(1L)).thenReturn(Optional.of(entity));
 
         GameResponseDTO responseDTO = service.findByIdAndActive(1L);
@@ -83,7 +74,7 @@ class GameServiceTest {
 
     @Test
     void testDeleteGame_success() {
-        Game entity = buildEntity(1L, 100, 20);
+        Game entity = buildEntity(1L);
         when(repository.findByIdOptional(1L)).thenReturn(Optional.of(entity));
 
         service.deleteGame(1L);
@@ -99,11 +90,6 @@ class GameServiceTest {
         doAnswer(invocation -> {
             Game g = invocation.getArgument(0);
             g.setId(1L);
-            g.setStock(Stock.builder()
-                    .totalStock(requestDTO.getStockQuantity())
-                    .reservedStock(0)
-                    .game(g)
-                    .build());
             return null;
         }).when(repository).persist(any(Game.class));
 
@@ -123,7 +109,7 @@ class GameServiceTest {
 
     @Test
     void testReplaceGame_success() {
-        Game existing = buildEntity(1L, 100, 10);
+        Game existing = buildEntity(1L);
         GameRequestDTO requestDTO = buildRequest();
 
         when(repository.findByIdOptional(1L)).thenReturn(Optional.of(existing));
@@ -136,7 +122,7 @@ class GameServiceTest {
 
     @Test
     void testUpdateGame_success() {
-        Game existing = buildEntity(1L, 100, 10);
+        Game existing = buildEntity(1L);
         GameRequestDTO requestDTO = buildRequest();
         requestDTO.setDescription("Updated description");
 
@@ -150,7 +136,8 @@ class GameServiceTest {
 
     @Test
     void testFindPaginated_success() {
-        when(repository.findPaginated(0, 10, "category", null)).thenReturn(List.of(buildEntity(1L, 50, 10)));
+        when(repository.findPaginated(0, 10, "category", null)).thenReturn(
+                List.of(buildEntity(1L)));
         List<GameResponseDTO> result = service.findPaginated(0, 10, null);
 
         assertEquals(1, result.size());
@@ -166,13 +153,8 @@ class GameServiceTest {
 
     @Test
     void testChangePrice_invalidValue() {
-        Game entity = buildEntity(1L, 100, 0);
+        Game entity = buildEntity(1L);
         assertThrows(IllegalArgumentException.class, () -> entity.changePrice(BigDecimal.ZERO));
     }
 
-    @Test
-    void testReserveStock_insufficient() {
-        Game entity = buildEntity(1L, 10, 10); // stock lleno
-        assertThrows(IllegalStateException.class, () -> entity.reserveStock(5));
-    }
 }

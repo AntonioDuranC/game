@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pe.com.ladc.enums.CurrencyType;
 import pe.com.ladc.enums.PaymentMethod;
 import java.math.BigDecimal;
 
@@ -18,4 +19,5 @@ public class PaymentRequestDTO {
     private Long orderId;
     private BigDecimal amount;
     private PaymentMethod method;
+    private CurrencyType currency;
 }
