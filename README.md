@@ -45,7 +45,9 @@ Para eliminar volumnes creados por los servicios definidos en tu `docker-compose
   ```bash
   ./mvnw quarkus:dev
   ```
-
+  ```bash
+  mvn quarkus:dev
+  ```
 ---
 
 ## 📦 Aplicación estará disponible

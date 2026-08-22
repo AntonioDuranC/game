@@ -1,6 +1,5 @@
 package pe.com.ladc.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import pe.com.ladc.enums.GameCategory;

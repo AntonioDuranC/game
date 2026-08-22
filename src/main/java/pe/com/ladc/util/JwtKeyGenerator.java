@@ -40,7 +40,7 @@ public class JwtKeyGenerator {
                 .expiresAt(exp)
                 .sign(privateKey);
 
-        System.out.println("🔑 JWT generado (expira en 12 horas):");
+        System.out.println("🔑 JWT generado (expira en 4 semanas):");
         System.out.println(token);
     }
 
